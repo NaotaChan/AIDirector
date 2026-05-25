@@ -1,5 +1,11 @@
 # Visual Studio 2015 user specific files
 .vs/
+*.vsconfig
+*.ddargs.json
+*.DotSettings.user
+
+# Idea jetbrain user specific files
+.idea/
 
 # Compiled Object files
 *.slo
@@ -15,6 +21,11 @@
 *.so
 *.dylib
 *.dll
+*.pdb
+*.exp
+*.lib
+*.target
+*.modules
 
 # Fortran module files
 *.mod
@@ -40,15 +51,29 @@
 *.sdf
 *.VC.db
 *.VC.opendb
-.vsconfig
-
-# Precompiled Assets
-SourceArt/**/*.png
-SourceArt/**/*.tga
 
 # Binary Files
 Binaries/*
-Plugins/**/Binaries/*
+Plugins/*/Binaries/*
+
+# Enable binaries subfolder
+!Binaries/*/
+!Plugins/*/Binaries/*/
+
+# Only necessaries DLL for opening the editor
+!Binaries/*/UnrealEditor-*.dll
+!Binaries/*/*.modules
+!Binaries/*/*Editor.target
+
+!Plugins/*/Binaries/*/UnrealEditor-*.dll
+!Plugins/*/Binaries/*/*.modules
+!Plugins/*/Binaries/*/*Editor.target
+
+# Git LFS files
+!git-lfs.exe
+!git-lfs
+!git-lfs-mac-amd64
+!git-lfs-mac-arm64
 
 # Builds
 Build/*
@@ -69,7 +94,19 @@ Saved/*
 
 # Compiled source files for the engine to use
 Intermediate/*
-Plugins/**/Intermediate/*
+Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Wwise cache / temp
+.WwiseCache/
+.cache/
+*.log
+
+# Local user settings
+*.user
+*.session
+
+# Generated intermediates
+GeneratedSoundBanks/**/Metadata
