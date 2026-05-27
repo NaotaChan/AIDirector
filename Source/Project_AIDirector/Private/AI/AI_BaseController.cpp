@@ -7,7 +7,6 @@
 void AAI_BaseController::OnPossess(APawn* InPawn)
 {
 	NPCRef = Cast<AAI_BaseNPC>(InPawn);
-	
 	Super::OnPossess(InPawn);
 }
 

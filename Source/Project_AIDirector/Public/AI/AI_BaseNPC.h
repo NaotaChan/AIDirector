@@ -7,6 +7,7 @@
 #include "AI_BaseNPC.generated.h"
 
 class AAI_BaseController;
+class AAIWaypoint;
 
 UCLASS()
 class PROJECT_AIDIRECTOR_API AAI_BaseNPC : public ACharacter
@@ -25,9 +26,15 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = "AIC")
 	AAI_BaseController* GetAICRef() {return AICRef;}
+	
+	UFUNCTION(BlueprintPure, Category = "Waypoint")
+	AAIWaypoint* GetStartWaypoint() {return StartWaypoint;}
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditInstanceOnly, Category = "Waypoint")
+	AAIWaypoint* StartWaypoint;
 	
 	AAI_BaseController* AICRef;
 
