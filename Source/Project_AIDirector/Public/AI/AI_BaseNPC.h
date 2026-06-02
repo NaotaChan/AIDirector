@@ -29,6 +29,7 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = "Waypoint")
 	AAIWaypoint* GetStartWaypoint() {return StartWaypoint;}
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -18,12 +18,17 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Waypoint")
 	float GetWaitTime() {return WaitTime;}
 	
+	UFUNCTION(BlueprintPure, Category = "Waypoint")
+	float GetCloseDistance() {return CloseDistance;}
 
 protected:
 	UPROPERTY(EditInstanceOnly, Category = "Waypoint")
 	AAIWaypoint* NextWaypoint;
 	
 	UPROPERTY(EditInstanceOnly, Category = "Waypoint")
-	float WaitTime;
+	float WaitTime = 0.f;
+	
+	UPROPERTY(EditInstanceOnly, Category = "Waypoint")
+	float CloseDistance = 200.f;
 
 };
