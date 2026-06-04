@@ -8,6 +8,7 @@
 
 class AAI_BaseController;
 class AAIWaypoint;
+class UAIInfo_DataAsset;
 
 UCLASS()
 class PROJECT_AIDIRECTOR_API AAI_BaseNPC : public ACharacter
@@ -30,6 +31,12 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Waypoint")
 	AAIWaypoint* GetStartWaypoint() {return StartWaypoint;}
 	
+	UFUNCTION(BlueprintPure, Category = "Data Asset")
+	UAIInfo_DataAsset* GetAIInfo_DataAsset() {return AIInfo_DataAsset;}
+	
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	void ChangeSpeedType();
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -38,5 +45,8 @@ protected:
 	AAIWaypoint* StartWaypoint;
 	
 	AAI_BaseController* AICRef;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data Asset")
+	UAIInfo_DataAsset* AIInfo_DataAsset;
 
 };
