@@ -3,6 +3,8 @@
 
 #include "Project_AIDirector/Public/AI/AI_BaseNPC.h"
 #include "Project_AIDirector/Public/AI/AI_BaseController.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "AIInfo_DataAsset.h"
 
 // Sets default values
 AAI_BaseNPC::AAI_BaseNPC()
@@ -10,6 +12,7 @@ AAI_BaseNPC::AAI_BaseNPC()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
+
 
 // Called when the game starts or when spawned
 void AAI_BaseNPC::BeginPlay()
@@ -31,3 +34,24 @@ void AAI_BaseNPC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void AAI_BaseNPC::ChangeSpeedType(E_AISpeedType NewSpeed)
+{
+	if (CurrentSpeedType != NewSpeed)
+	{
+		switch (NewSpeed)
+		{
+			case E_AISpeedType::WALK:
+				{
+					CurrentSpeedType = E_AISpeedType::WALK;
+					GetCharacterMovement()->MaxWalkSpeed = GetAIInfo_DataAsset()->WalkSpeed;
+					break;
+				}
+			case E_AISpeedType::RUN:
+				{
+					CurrentSpeedType = E_AISpeedType::RUN;
+					GetCharacterMovement()->MaxWalkSpeed = GetAIInfo_DataAsset()->RunSpeed;
+					break;
+				}		
+		}
+	}
+}

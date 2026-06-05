@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "../Enum_SpeedTypes.h"
 #include "AI_BaseNPC.generated.h"
+
 
 class AAI_BaseController;
 class AAIWaypoint;
@@ -34,8 +36,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Data Asset")
 	UAIInfo_DataAsset* GetAIInfo_DataAsset() {return AIInfo_DataAsset;}
 	
+	UFUNCTION(BlueprintPure, Category = "Movement")
+	E_AISpeedType GetCurrentSpeedType() {return CurrentSpeedType;}
+	
 	UFUNCTION(BlueprintCallable, Category = "Movement")
-	void ChangeSpeedType();
+	void ChangeSpeedType(E_AISpeedType NewSpeed);
 	
 protected:
 	// Called when the game starts or when spawned
@@ -48,5 +53,8 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data Asset")
 	UAIInfo_DataAsset* AIInfo_DataAsset;
+	
+	UPROPERTY()
+	E_AISpeedType CurrentSpeedType;
 
 };
