@@ -22,6 +22,9 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void ActorPerceivedUpdate(AActor* UpdatedActor, FAIStimulus Stimulus);
+	
+	//Team ID
+	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;

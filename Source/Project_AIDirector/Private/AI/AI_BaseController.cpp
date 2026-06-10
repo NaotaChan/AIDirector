@@ -4,7 +4,7 @@
 #include "Project_AIDirector/Public/AI/AI_BaseController.h"
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Project_AIDirector/Public/AI/AI_BaseNPC.h"
-#include "Navigation/CrowdFollowingComponent.h"
+//#include "Navigation/CrowdFollowingComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 
 AAI_BaseController::AAI_BaseController(const FObjectInitializer& ObjectInitializer)
@@ -17,9 +17,13 @@ AAI_BaseController::AAI_BaseController(const FObjectInitializer& ObjectInitializ
 		CrowdComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::High);
 	}
 	
+	SetGenericTeamId(FGenericTeamId(1));
+	
 	//Setup AI Perception
 	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception Component"));
 }
+
+
 
 void AAI_BaseController::OnPossess(APawn* InPawn)
 {
@@ -28,6 +32,33 @@ void AAI_BaseController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 	
 	PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &AAI_BaseController::ActorPerceivedUpdate);
+}
+
+ETeamAttitude::Type AAI_BaseController::GetTeamAttitudeTowards(const AActor& Other) const
+{
+	if (const APawn* OtherPawn = Cast<APawn>(&Other))
+	{
+		if (const IGenericTeamAgentInterface* TeamAgent = Cast<IGenericTeamAgentInterface>(OtherPawn->GetController()))
+		{
+			FGenericTeamId OtherTeamID = TeamAgent->GetGenericTeamId();
+			if (OtherTeamID == 255)
+			{
+				return ETeamAttitude::Neutral;
+			}
+			else if (OtherTeamID == GetGenericTeamId())
+			{
+				return ETeamAttitude::Friendly;
+			}
+			else
+			{
+				{
+					return ETeamAttitude::Hostile;
+				}
+			}
+		}
+	}
+	
+	return ETeamAttitude::Hostile;
 }
 
 void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActor, FAIStimulus Stimulus)
