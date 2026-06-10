@@ -25,6 +25,12 @@ public:
 	
 	//Team ID
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
+	
+	UFUNCTION()
+	void SetupSightInfo();
+	
+	UFUNCTION()
+	void SetupHearingInfo();
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
