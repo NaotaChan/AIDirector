@@ -10,6 +10,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Perception/AISense_Hearing.h"
 
 AProject_AIDirectorCharacter::AProject_AIDirectorCharacter()
 {
@@ -48,4 +51,35 @@ AProject_AIDirectorCharacter::AProject_AIDirectorCharacter()
 void AProject_AIDirectorCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+}
+
+void AProject_AIDirectorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		if (WhistleAction)
+		{
+			EnhancedInputComponent->BindAction(WhistleAction, ETriggerEvent::Started, this, &AProject_AIDirectorCharacter::OnWhistleTriggered);
+		}
+	}
+}
+
+void AProject_AIDirectorCharacter::OnWhistleTriggered()
+{
+
+	UAISense_Hearing::ReportNoiseEvent(
+		GetWorld(), 
+		GetActorLocation(), 
+		1.0f,               // Loudness (da 0 a 1)
+		this,               // Instigator (chi fa rumore)
+		1500.f,             // Max Range
+		FName("Whistle")    // Tag hardcodato (da cambiare)
+	);
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Fischiato! Trigger partito."));
+	}
 }
