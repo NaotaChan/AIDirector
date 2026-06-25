@@ -10,6 +10,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Perception/AISense_Hearing.h"
 
 AProject_AIDirectorCharacter::AProject_AIDirectorCharacter()
 {
@@ -49,3 +52,4 @@ void AProject_AIDirectorCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 }
+
