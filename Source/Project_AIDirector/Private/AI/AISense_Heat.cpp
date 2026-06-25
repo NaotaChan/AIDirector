@@ -123,6 +123,7 @@ void UAISense_Heat::EvaluateEvent(const FAIHeatEvent& Event)
 			}
 			else
 			{
+				PerceptionListener.RegisterStimulus(Event.Target, FAIStimulus(*this, Event.Strenght, InstigatorLocation, TargetLocation, FAIStimulus::SensingFailed, FName("Heat")));
 				if (PropDigest->bDisplayFailDebug)
 				{
 					DrawDebugLine(GetWorld(), InstigatorLocation, TargetLocation, PropDigest->FailDebugColor, false, 5.f, 0, 5.f);
