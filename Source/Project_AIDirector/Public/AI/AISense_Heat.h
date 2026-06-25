@@ -33,8 +33,8 @@ struct FAIHeatEvent
 	
 	FAIHeatEvent() = default;
 	
-	FAIHeatEvent(AActor* InHeatInstigator, AActor* InTarget, const FVector& HeatLocation, const float InStrenght)
-		: Instigator(InHeatInstigator), Target(InTarget), Location(HeatLocation), Strenght(InStrenght)
+	FAIHeatEvent(AActor* InHeatInstigator, AActor* InTarget, const FVector& HeatLocation, const float InStrenght, const bool InIsSuccessfullyHeatingUp)
+		: Instigator(InHeatInstigator), Target(InTarget), Location(HeatLocation), Strenght(InStrenght), IsSuccessfullyHeatingUp(InIsSuccessfullyHeatingUp)
 	{
 		TeamIdentifier = FGenericTeamId::GetTeamIdentifier(InHeatInstigator);
 	}
@@ -68,7 +68,7 @@ public:
 	UAISense_Heat(const FObjectInitializer& ObjectInitializer);
 	
 	UFUNCTION(BlueprintCallable, Category = "AI|Perception", meta = (WorldContext = "WorldContextObject"))
-	static void ReportHeatEvent(UObject* WorldContextObject, AActor* Instigator, AActor* Target, FVector Location, float Strenght);
+	static void ReportHeatEvent(UObject* WorldContextObject, AActor* Instigator, AActor* Target, FVector Location, float Strenght, bool IsSuccessfullyHeatingUp);
 	
 	void RegisterEvent(const FAIHeatEvent& Event);
 	

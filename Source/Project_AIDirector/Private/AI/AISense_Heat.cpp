@@ -55,12 +55,12 @@ void UAISense_Heat::OnListenerRemovedImpl(const FPerceptionListener& RemovedList
 }
 
 void UAISense_Heat::ReportHeatEvent(UObject* WorldContextObject, AActor* Instigator, AActor* Target, FVector Location,
-	float Strenght)
+	float Strenght, bool IsSuccessfullyHeatingUp)
 {
 	UAIPerceptionSystem* PerceptionSystem = UAIPerceptionSystem::GetCurrent(WorldContextObject);
 	if (PerceptionSystem)
 	{
-		const FAIHeatEvent Event(Instigator, Target, Location, Strenght);
+		const FAIHeatEvent Event(Instigator, Target, Location, Strenght, IsSuccessfullyHeatingUp);
 		PerceptionSystem->OnEvent(Event);
 	}
 }
