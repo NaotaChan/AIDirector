@@ -25,6 +25,10 @@ struct FAIHeatEvent
 	UPROPERTY()
 	float Strenght = 0.f;
 	
+	//Check if stimulus is perceived or lost
+	UPROPERTY()
+	bool IsSuccessfullyHeatingUp = true;
+	
 	FGenericTeamId TeamIdentifier = FGenericTeamId::NoTeam;
 	
 	FAIHeatEvent() = default;
@@ -49,7 +53,7 @@ public:
 	
 	struct FDigestedHeatProperties
 	{
-		float HeatRadius;
+		//float HeatRadius;
 		bool bDisplaySuccessDebug;
 		FColor SuccessDebugColor;
 		bool bDisplayFailDebug;

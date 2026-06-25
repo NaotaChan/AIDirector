@@ -22,8 +22,8 @@ public:
 	TSubclassOf<UAISense_Heat> Implementation;
 	
 	//The radius around the pawn that we're checking for "water resources"
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sense", config, meta = (UIMin = 0.0, Clampmin = 0.0))
-	float HeatRadius;
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sense", config, meta = (UIMin = 0.0, Clampmin = 0.0))
+	//float HeatRadius;
 	
 	//True if you want to display the success line debug
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sense", config)

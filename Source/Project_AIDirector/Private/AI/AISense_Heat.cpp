@@ -22,7 +22,7 @@ UAISense_Heat::FDigestedHeatProperties::FDigestedHeatProperties()
 {
 	
 	//Init
-	HeatRadius = 15.f;
+	//HeatRadius = 15.f;
 	bDisplaySuccessDebug = false;
 	SuccessDebugColor =  FColor::Green;
 	bDisplayFailDebug = false;
@@ -31,7 +31,7 @@ UAISense_Heat::FDigestedHeatProperties::FDigestedHeatProperties()
 
 UAISense_Heat::FDigestedHeatProperties::FDigestedHeatProperties(const UAISenseConfig_Heat& SenseConfig)
 {
-	HeatRadius = SenseConfig.HeatRadius;
+	//HeatRadius = SenseConfig.HeatRadius;
 	bDisplaySuccessDebug = SenseConfig.bDisplaySuccessDebug;
 	SuccessDebugColor =  SenseConfig.SuccessDebugColor;
 	bDisplayFailDebug = SenseConfig.bDisplayFailDebug;
@@ -113,7 +113,8 @@ void UAISense_Heat::EvaluateEvent(const FAIHeatEvent& Event)
 			
 			float Distance = FVector::Dist(TargetLocation, InstigatorLocation);
 			
-			if (Distance <= PropDigest->HeatRadius)
+			//if (Distance <= PropDigest->HeatRadius)
+			if (Event.IsSuccessfullyHeatingUp)
 			{
 				PerceptionListener.RegisterStimulus(Event.Target, FAIStimulus(*this, Event.Strenght, InstigatorLocation, TargetLocation, FAIStimulus::SensingSucceeded, FName("Heat")));
 				if (PropDigest->bDisplaySuccessDebug)
