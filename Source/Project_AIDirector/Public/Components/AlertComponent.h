@@ -21,6 +21,13 @@ public:
 	
 	void SetupAlert();
 	
+	
+	UFUNCTION(BlueprintPure, Category = "Alert")
+	float GetCurrentAlertValue() {return CurrentAlertValue;}
+	
+	UFUNCTION(BlueprintPure, Category = "Alert")
+	float GetMaxAlertValue() {return MaxAlertValue;}
+	
 	UFUNCTION()
 	bool GetCanUpdateAlert() const {return CanUpdateAlert;}
 	

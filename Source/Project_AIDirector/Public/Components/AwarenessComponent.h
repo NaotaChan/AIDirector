@@ -21,6 +21,13 @@ public:
 	
 	void SetupAwareness();
 	
+	UFUNCTION(BlueprintPure, Category = "Awareness")
+	float GetCurrentAwarenessValue() {return CurrentAwarenessValue;}
+	
+	UFUNCTION(BlueprintPure, Category = "Awareness")
+	float GetMaxAwarnessValue() {return MaxAwarenessValue;}
+	
+	
 	UFUNCTION()
 	bool GetCanUpdateAwareness() const {return CanUpdateAwareness;}
 	
