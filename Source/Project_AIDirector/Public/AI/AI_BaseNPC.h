@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "../Enum_SpeedTypes.h"
+#include "../Enum/Speed/Enum_SpeedTypes.h"
+#include "Enum/AITypes/Enum_AITypes.h"
 #include "AI_BaseNPC.generated.h"
 
 
@@ -28,19 +29,22 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	UFUNCTION(BlueprintPure, Category = "AIC")
-	AAI_BaseController* GetAICRef() {return AICRef;}
+	AAI_BaseController* GetAICRef() const {return AICRef;}
 	
 	UFUNCTION(BlueprintPure, Category = "Waypoint")
-	AAIWaypoint* GetStartWaypoint() {return StartWaypoint;}
+	AAIWaypoint* GetStartWaypoint() const {return StartWaypoint;}
 	
 	UFUNCTION(BlueprintPure, Category = "Data Asset")
-	UAIInfo_DataAsset* GetAIInfo_DataAsset() {return AIInfo_DataAsset;}
+	UAIInfo_DataAsset* GetAIInfo_DataAsset() const {return AIInfo_DataAsset;}
 	
 	UFUNCTION(BlueprintPure, Category = "Movement")
-	E_AISpeedType GetCurrentSpeedType() {return CurrentSpeedType;}
+	E_AISpeedType GetCurrentSpeedType() const {return CurrentSpeedType;}
 	
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void ChangeSpeedType(E_AISpeedType NewSpeed);
+	
+	UFUNCTION(BlueprintPure, Category = "AI Types")
+	E_AITypes GetAITypes() const {return AITypes;}
 	
 protected:
 	// Called when the game starts or when spawned
@@ -56,5 +60,7 @@ protected:
 	
 	UPROPERTY()
 	E_AISpeedType CurrentSpeedType;
-
+	
+	UPROPERTY()
+	E_AITypes AITypes;
 };

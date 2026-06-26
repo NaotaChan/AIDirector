@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "Enum/AITypes/Enum_AITypes.h"
 #include "AIInfo_DataAsset.generated.h"
 
 UCLASS()
@@ -12,6 +13,12 @@ class PROJECT_AIDIRECTOR_API UAIInfo_DataAsset : public UDataAsset
 	GENERATED_BODY()
 	
 public:
+	
+	//AI Types
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AI Types")
+	E_AITypes AITypes = E_AITypes::REGULAR; 
+	
+	
 	//Movement
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
 	float WalkSpeed = 200.f; 

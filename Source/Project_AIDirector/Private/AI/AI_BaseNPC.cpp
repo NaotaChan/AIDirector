@@ -20,6 +20,11 @@ void AAI_BaseNPC::BeginPlay()
 	AICRef = Cast<AAI_BaseController>(GetController());
 	Super::BeginPlay();
 	
+	if(GetAIInfo_DataAsset())
+	{
+		AITypes = GetAIInfo_DataAsset()->AITypes;
+	}
+	
 }
 
 // Called every frame

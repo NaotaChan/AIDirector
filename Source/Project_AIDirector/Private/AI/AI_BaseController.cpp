@@ -7,6 +7,7 @@
 
 #include "Navigation/CrowdFollowingComponent.h"
 //#include "Navigation/CrowdFollowingComponent.h"
+#include "GameplayTagsManager.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISense_Sight.h"
 #include "Perception/AISenseConfig_Sight.h"
@@ -40,6 +41,8 @@ void AAI_BaseController::OnPossess(APawn* InPawn)
 	
 	SetupSightInfo();
 	SetupHearingInfo();
+	
+	UpdateCurrentStatusTag(E_AITag::UNAWARE);
 	
 	Super::OnPossess(InPawn);
 	
@@ -147,6 +150,65 @@ void AAI_BaseController::SetupHearingInfo()
 	
 	Perception->RequestStimuliListenerUpdate();
 	
+}
+
+void AAI_BaseController::UpdateCurrentStatusTag(E_AITag NewTag)
+{
+	switch (NewTag)
+	{
+		case E_AITag::UNAWARE:
+			{
+				CurrentStatusTag = UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Unaware"));
+				
+				break;
+			}
+		case E_AITag::SUSPICIOUS:
+			{
+				CurrentStatusTag = UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Suspicious"));
+
+					
+				break;
+			}
+		case E_AITag::HUNTING:
+			{
+				CurrentStatusTag = UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Hunting"));
+
+					
+				break;
+			}
+		case E_AITag::ALERTED:
+			{
+				CurrentStatusTag = UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Alerted"));
+
+					
+				break;
+			}
+	}
+}
+
+bool AAI_BaseController::CheckCurrentStatusTag(E_AITag TagToCheck)
+{
+	switch (TagToCheck)
+	{
+	case E_AITag::UNAWARE:
+		{
+			return GetCurrentStatusTag().MatchesTagExact(UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Unaware")));
+		}
+	case E_AITag::SUSPICIOUS:
+		{
+			return GetCurrentStatusTag().MatchesTagExact(UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Suspicious")));
+		}
+	case E_AITag::HUNTING:
+		{
+			return GetCurrentStatusTag().MatchesTagExact(UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Hunting")));
+		}
+	case E_AITag::ALERTED:
+		{
+			return GetCurrentStatusTag().MatchesTagExact(UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Alerted")));
+		}
+	}
+	
+	return false;
 }
 
 void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActor, FAIStimulus Stimulus)

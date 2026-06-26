@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "GameplayTagContainer.h"
+#include "Enum/AITypes/Enum_AITypes.h"
+
 #include "AI_BaseController.generated.h"
 
 class AAI_BaseNPC;
@@ -18,7 +21,7 @@ public:
 	AAI_BaseController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	UFUNCTION(BlueprintPure, Category = "NPC")
-	AAI_BaseNPC* GetNPCRef() {return NPCRef;}
+	AAI_BaseNPC* GetNPCRef() const {return NPCRef;}
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void ActorPerceivedUpdate(AActor* UpdatedActor, FAIStimulus Stimulus);
@@ -31,9 +34,22 @@ public:
 	
 	UFUNCTION()
 	void SetupHearingInfo();
+	
+	UFUNCTION(BlueprintPure, Category = "AI Status")
+	FGameplayTag GetCurrentStatusTag() const {return CurrentStatusTag;}
+	
+	UFUNCTION(BlueprintCallable, Category= "AI Status")
+	void UpdateCurrentStatusTag(E_AITag NewTag);
+	
+	UFUNCTION(BlueprintCallable, Category= "AI Status")
+	bool CheckCurrentStatusTag(E_AITag TagToCheck);
+	
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
+	
 	AAI_BaseNPC* NPCRef;
+	
+	FGameplayTag CurrentStatusTag;
 
 };
