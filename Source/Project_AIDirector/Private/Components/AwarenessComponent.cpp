@@ -4,6 +4,8 @@
 #include "Components/AwarenessComponent.h"
 #include "AI/AI_BaseController.h"
 #include "Components/AlertComponent.h"
+#include "AI/AI_BaseNPC.h"
+#include "AIInfo_DataAsset.h"
 
 
 
@@ -23,6 +25,43 @@ void UAwarenessComponent::InitializeComponent()
 	AICRef = Cast<AAI_BaseController>(GetOwner());
 	
 	Super::InitializeComponent();
+}
+
+void UAwarenessComponent::SetupAwareness()
+{
+	if (IsValid(AICRef) &&
+			IsValid(AICRef->GetNPCRef()) &&
+				IsValid(AICRef->GetNPCRef()->GetAIInfo_DataAsset()))
+	{
+		MaxAwarenessValue = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->MaxAwarenessValue;
+		AwarenessDecreaseValue = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessDecreaseValue;
+		AwarenessDecreaseTime = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessDecreaseTime;
+		AwarenessPauseTime = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessPauseTime;
+		AwarenessIncreaseOnHearing = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessIncreaseOnHearing;
+		AwarenessIncreaseOnSight = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessIncreaseOnSight;
+	}
+}
+
+void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense)
+{
+	switch (InputSense)
+	{
+	case E_AISense::SIGHT:
+		{
+			UpdateAwarenessValue(AwarenessIncreaseOnSight);
+			break;
+		}
+	case E_AISense::HEARING:
+		{
+			UpdateAwarenessValue(AwarenessIncreaseOnHearing);
+			break;
+		}
+	case E_AISense::TOUCH:
+		{
+			UpdateAwarenessValue(MaxAwarenessValue);
+			break;
+		}
+	}
 }
 
 void UAwarenessComponent::UpdateAwarenessValue(float AwarenessDelta)

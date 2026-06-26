@@ -49,6 +49,8 @@ void AAI_BaseController::OnPossess(APawn* InPawn)
 	
 	SetupSightInfo();
 	SetupHearingInfo();
+	GetAwarenessComponent()->SetupAwareness();
+	//TODO Setup Alert;
 	
 	UpdateCurrentStatusTag(E_AITag::UNAWARE);
 	
@@ -167,28 +169,21 @@ void AAI_BaseController::UpdateCurrentStatusTag(E_AITag NewTag)
 		case E_AITag::UNAWARE:
 			{
 				CurrentStatusTag = UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Unaware"));
-				
 				break;
 			}
 		case E_AITag::SUSPICIOUS:
 			{
 				CurrentStatusTag = UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Suspicious"));
-
-					
 				break;
 			}
 		case E_AITag::HUNTING:
 			{
 				CurrentStatusTag = UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Hunting"));
-
-					
 				break;
 			}
 		case E_AITag::ALERTED:
 			{
 				CurrentStatusTag = UGameplayTagsManager::Get().RequestGameplayTag(TEXT("AIStatus.Alerted"));
-
-					
 				break;
 			}
 	}

@@ -19,6 +19,8 @@ public:
 	
 	virtual void InitializeComponent() override;
 	
+	void SetupAwareness();
+	
 	UFUNCTION()
 	bool GetCanUpdateAwareness() const {return CanUpdateAwareness;}
 	
@@ -30,6 +32,9 @@ public:
 	
 	UFUNCTION()
 	void SetIsDecreasing(bool NewStatus) {IsDecreasing = NewStatus;}
+	
+	UFUNCTION(BlueprintCallable, Category = "Awareness")
+	void UpdateAwarenessValueFromSense(E_AISense InputSense);
 	
 	UFUNCTION(BlueprintCallable, Category = "Awareness")
 	void UpdateAwarenessValue(float AwarenessDelta);

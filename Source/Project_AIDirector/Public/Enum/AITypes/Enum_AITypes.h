@@ -18,3 +18,13 @@ enum class E_AITag : uint8
 	HUNTING			UMETA(DisplayName = "Hunting"),
 	ALERTED			UMETA(DisplayName = "Alerted")
 };
+
+//Enum Sense
+UENUM(BlueprintType)
+enum class E_AISense : uint8
+{
+	NONE			UMETA(DisplayName = "None"),
+	SIGHT			UMETA(DisplayName = "Sight"),
+	HEARING			UMETA(DisplayName = "Hearing"),
+	TOUCH			UMETA(DisplayName = "Touch")
+};

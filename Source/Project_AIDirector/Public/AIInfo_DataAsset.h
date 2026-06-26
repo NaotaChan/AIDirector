@@ -48,4 +48,26 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Hearing")
 	float WalkHearingRange = 250.f;
+	
+	
+	
+	//Awareness
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Setup")
+	float MaxAwarenessValue = 100.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Setup")
+	float AwarenessDecreaseValue = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Setup")
+	float AwarenessDecreaseTime = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Setup")
+	float AwarenessPauseTime = 2.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Hearing")
+	float AwarenessIncreaseOnHearing = 5.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Sight")
+	float AwarenessIncreaseOnSight = 15.f;
+
 };
