@@ -47,7 +47,7 @@ void UAwarenessComponent::UpdateAwarenessValue(float AwarenessDelta)
 		{
 			CurrentAwarenessValue = MaxAwarenessValue;
 			
-			SetCanUpdateAwareness(false);
+			StopAwareness();
 			
 			if (IsValid(AICRef->GetAlertComponent()))
 			{
@@ -79,11 +79,30 @@ void UAwarenessComponent::OnDecreaseAwarenessValue()
 		
 		if (CurrentAwarenessValue <= 0)
 		{
-			CurrentAwarenessValue = 0;
+			CurrentAwarenessValue = 0.f;
 			SetIsDecreasing(false);
 			GetWorld()->GetTimerManager().ClearTimer(DecreaseTimerHandle);
 		}
 	}
+}
+
+void UAwarenessComponent::StopAwareness()
+{
+	GetWorld()->GetTimerManager().ClearTimer(DecreaseTimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(PauseTimerHandle);
+	SetCanUpdateAwareness(false);
+
+
+}
+
+void UAwarenessComponent::ResetAwareness()
+{
+	CurrentAwarenessValue = 0.f;
+	SetCanUpdateAwareness(true);
+	
+	//TODO: In the future implement an AWARE status
+	
+	AICRef->UpdateCurrentStatusTag(E_AITag::UNAWARE);
 }
 
 // Called when the game starts

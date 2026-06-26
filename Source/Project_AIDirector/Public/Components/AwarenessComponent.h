@@ -37,6 +37,11 @@ public:
 	void OnPauseFinished();
 	
 	void OnDecreaseAwarenessValue();
+	
+	void StopAwareness();
+	
+	UFUNCTION(BlueprintCallable, Category = "Awareness")
+	void ResetAwareness();
 
 protected:
 	// Called when the game starts
