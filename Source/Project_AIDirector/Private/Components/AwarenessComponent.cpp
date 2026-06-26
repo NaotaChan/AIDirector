@@ -54,6 +54,8 @@ void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense)
 	case E_AISense::HEARING:
 		{
 			UpdateAwarenessValue(AwarenessIncreaseOnHearing);
+			//TODO: If Hear a whistle (MaxAwareness), if hear steps (AwarenessIncreaseOnHearing)
+			
 			break;
 		}
 	case E_AISense::TOUCH:
@@ -90,7 +92,7 @@ void UAwarenessComponent::UpdateAwarenessValue(float AwarenessDelta)
 			
 			if (IsValid(AICRef->GetAlertComponent()))
 			{
-				AICRef->GetAlertComponent()->SetCanUpdateAlerted(true);
+				AICRef->GetAlertComponent()->SetCanUpdateAlert(true);
 				AICRef->UpdateCurrentStatusTag(E_AITag::SUSPICIOUS);
 			}
 		}
@@ -130,8 +132,6 @@ void UAwarenessComponent::StopAwareness()
 	GetWorld()->GetTimerManager().ClearTimer(DecreaseTimerHandle);
 	GetWorld()->GetTimerManager().ClearTimer(PauseTimerHandle);
 	SetCanUpdateAwareness(false);
-
-
 }
 
 void UAwarenessComponent::ResetAwareness()

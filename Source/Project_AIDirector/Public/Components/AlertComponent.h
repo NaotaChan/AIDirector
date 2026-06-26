@@ -19,14 +19,34 @@ public:
 		
 	virtual void InitializeComponent() override;
 	
-	UFUNCTION()
-	bool GetCanUpdateAlerted() const {return CanUpdateAlerted;}
+	void SetupAlert();
 	
 	UFUNCTION()
-	void SetCanUpdateAlerted(bool NewStatus) {CanUpdateAlerted = NewStatus;}
+	bool GetCanUpdateAlert() const {return CanUpdateAlert;}
 	
-	UFUNCTION(BlueprintCallable, Category = "Alerted")
-	void UpdateAlertedValue(float AlertedDelta);
+	UFUNCTION()
+	void SetCanUpdateAlert(bool NewStatus) {CanUpdateAlert = NewStatus;}
+	
+	UFUNCTION(BlueprintCallable, Category = "Alert")
+	void UpdateAlertValueFromSense(E_AISense InputSense);
+	
+	UFUNCTION(BlueprintCallable, Category = "Alert")
+	void UpdateAlertValue(float AlertDelta);
+	
+	UFUNCTION()
+	bool GetIsDecreasing() const {return IsDecreasing;}
+	
+	UFUNCTION()
+	void SetIsDecreasing(bool NewStatus) {IsDecreasing = NewStatus;}
+	
+	void OnPauseFinished();
+	
+	void OnDecreaseAlertValue();
+	
+	void StopAlert();
+	
+	UFUNCTION(BlueprintCallable, Category = "Alert")
+	void ResetAlert(bool ResetAwareness = true);
 
 
 protected:
@@ -36,14 +56,19 @@ protected:
 	UPROPERTY()
 	AAI_BaseController* AICRef;
 	
+	FTimerHandle PauseTimerHandle;
+	
+	FTimerHandle DecreaseTimerHandle;
+	
 private:
 	
-	float CurrentAlertedValue;
-	float MaxAlertedValue;
-	float AlertedDecreaseValue;
-	float AlertedDecreaseTime;
-	float AlertedPauseTime;
-	float AlertedIncreaseOnSight;	
+	float CurrentAlertValue;
+	float MaxAlertValue;
+	float AlertDecreaseValue;
+	float AlertDecreaseTime;
+	float AlertPauseTime;
+	float AlertIncreaseOnSight;	
 	
-	bool CanUpdateAlerted;
+	bool CanUpdateAlert;
+	bool IsDecreasing;
 };

@@ -69,5 +69,21 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Sight")
 	float AwarenessIncreaseOnSight = 15.f;
+	
+	//Alert
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Setup")
+	float MaxAlertValue = 100.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Setup")
+	float AlertDecreaseValue = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Setup")
+	float AlertDecreaseTime = 0.5f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Setup")
+	float AlertPauseTime = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Sight")
+	float AlertIncreaseOnSight = 20.f;
 
 };

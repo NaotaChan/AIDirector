@@ -50,7 +50,7 @@ void AAI_BaseController::OnPossess(APawn* InPawn)
 	SetupSightInfo();
 	SetupHearingInfo();
 	GetAwarenessComponent()->SetupAwareness();
-	//TODO Setup Alert;
+	GetAlertComponent()->SetupAlert();
 	
 	UpdateCurrentStatusTag(E_AITag::UNAWARE);
 	
