@@ -31,7 +31,7 @@ public:
 	void UpdateAlertValueFromSense(E_AISense InputSense);
 	
 	UFUNCTION(BlueprintCallable, Category = "Alert")
-	void UpdateAlertValue(float AlertDelta);
+	void UpdateAlertValue(float AlertDelta, bool IsFromTouching = false);
 	
 	UFUNCTION()
 	bool GetIsDecreasing() const {return IsDecreasing;}

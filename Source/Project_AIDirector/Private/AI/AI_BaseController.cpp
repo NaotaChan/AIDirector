@@ -7,6 +7,7 @@
 
 #include "Navigation/CrowdFollowingComponent.h"
 //#include "Navigation/CrowdFollowingComponent.h"
+#include "BrainComponent.h"
 #include "GameplayTagsManager.h"
 #include "Components/AlertComponent.h"
 #include "Components/AwarenessComponent.h"
@@ -216,5 +217,49 @@ bool AAI_BaseController::CheckCurrentStatusTag(E_AITag TagToCheck)
 
 void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActor, FAIStimulus Stimulus)
 {
+	if (!BrainComponent || !BrainComponent->IsRunning() || !IsValid(UpdatedActor))
+	{
+		return;
+	}
 	
+	E_AISense CurrentSenseUsed = E_AISense::NONE;
+	
+	if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
+	{
+		CurrentSenseUsed = E_AISense::SIGHT;
+		
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed);
+			GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed);
+		}
+		
+	}
+	else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>())
+	{
+		CurrentSenseUsed = E_AISense::HEARING;
+		
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			
+			if (Stimulus.Tag == "Run" ||
+					Stimulus.Tag == "Whistle" ||
+						Stimulus.Tag == "Walk" &&
+						(GetNPCRef()->GetActorLocation() - Stimulus.StimulusLocation).Size() <= GetNPCRef()->GetAIInfo_DataAsset()->WalkHearingRange)
+			{
+				GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed, (Stimulus.Tag == "Whistle" ? true : false));
+			}
+		}
+		
+	}
+	else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Touch>())
+	{
+		CurrentSenseUsed = E_AISense::TOUCH;
+		
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed);
+			GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed);
+		}
+	}
 }

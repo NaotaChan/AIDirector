@@ -42,7 +42,7 @@ void UAwarenessComponent::SetupAwareness()
 	}
 }
 
-void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense)
+void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense, bool IsFromWhistle)
 {
 	switch (InputSense)
 	{
@@ -53,9 +53,7 @@ void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense)
 		}
 	case E_AISense::HEARING:
 		{
-			UpdateAwarenessValue(AwarenessIncreaseOnHearing);
-			//TODO: If Hear a whistle (MaxAwareness), if hear steps (AwarenessIncreaseOnHearing)
-			
+			UpdateAwarenessValue(IsFromWhistle ? MaxAwarenessValue : AwarenessIncreaseOnHearing);
 			break;
 		}
 	case E_AISense::TOUCH:
@@ -93,8 +91,9 @@ void UAwarenessComponent::UpdateAwarenessValue(float AwarenessDelta)
 			if (IsValid(AICRef->GetAlertComponent()))
 			{
 				AICRef->GetAlertComponent()->SetCanUpdateAlert(true);
-				AICRef->UpdateCurrentStatusTag(E_AITag::SUSPICIOUS);
 			}
+			
+			AICRef->UpdateCurrentStatusTag(E_AITag::SUSPICIOUS);
 		}
 	}
 }

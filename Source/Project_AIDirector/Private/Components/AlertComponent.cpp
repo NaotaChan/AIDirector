@@ -56,15 +56,49 @@ void UAlertComponent::UpdateAlertValueFromSense(E_AISense InputSense)
 		}
 	case E_AISense::TOUCH:
 		{
-			UpdateAlertValue(MaxAlertValue);
+			UpdateAlertValue(MaxAlertValue, true);
 			break;
 		}
 	}
 }
 
-void UAlertComponent::UpdateAlertValue(float AlertedDelta)
+void UAlertComponent::UpdateAlertValue(float AlertDelta, bool IsFromTouching)
 {
-	
+	if (IsValid(AICRef) && GetCanUpdateAlert())
+	{
+		if (AlertDelta > 0)
+		{
+			//Restart the timer if the stimulus persist
+			if (PauseTimerHandle.IsValid())
+			{
+				GetWorld()->GetTimerManager().ClearTimer(PauseTimerHandle);
+			}
+			
+			GetWorld()->GetTimerManager().SetTimer(PauseTimerHandle, this, &UAlertComponent::OnPauseFinished, AlertPauseTime, false);
+			
+		}
+		
+		CurrentAlertValue = FMath::Clamp(CurrentAlertValue + AlertDelta, 0.f, MaxAlertValue);
+		
+		if (CurrentAlertValue >= MaxAlertValue)
+		{
+			CurrentAlertValue = MaxAlertValue;
+			
+			StopAlert();
+			
+			if (IsFromTouching == true)
+			{
+				AICRef->UpdateCurrentStatusTag(E_AITag::HUNTING);
+			}
+			else
+			{
+				AICRef->UpdateCurrentStatusTag(E_AITag::ALERTED);
+			}
+			
+			// Same Check with Ternary Operator:
+			// AICRef->UpdateCurrentStatusTag(IsFromTouching? E_AITag::HUNTING : E_AITag::ALERTED);
+		}
+	}
 }
 
 void UAlertComponent::OnPauseFinished()
@@ -104,11 +138,10 @@ void UAlertComponent::StopAlert()
 void UAlertComponent::ResetAlert(bool ResetAwareness)
 {
 	CurrentAlertValue = 0.f;
-	SetCanUpdateAlert(true);
 	
-	//TODO: In the future implement an AWARE status
+	SetCanUpdateAlert(ResetAwareness ? false : true);
 	
-	AICRef->UpdateCurrentStatusTag(E_AITag::UNAWARE);
+	AICRef->UpdateCurrentStatusTag(ResetAwareness ? E_AITag::UNAWARE : E_AITag::SUSPICIOUS);
 	
 	if (ResetAwareness)
 	{

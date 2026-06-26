@@ -34,7 +34,7 @@ public:
 	void SetIsDecreasing(bool NewStatus) {IsDecreasing = NewStatus;}
 	
 	UFUNCTION(BlueprintCallable, Category = "Awareness")
-	void UpdateAwarenessValueFromSense(E_AISense InputSense);
+	void UpdateAwarenessValueFromSense(E_AISense InputSense, bool IsFromWhistle = false);
 	
 	UFUNCTION(BlueprintCallable, Category = "Awareness")
 	void UpdateAwarenessValue(float AwarenessDelta);
