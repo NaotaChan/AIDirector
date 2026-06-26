@@ -9,7 +9,8 @@
 
 #include "AI_BaseController.generated.h"
 
-class AAI_BaseNPC;
+class UAwarenessComponent;
+class UAlertComponent;
 
 UCLASS()
 class PROJECT_AIDIRECTOR_API AAI_BaseController : public AAIController
@@ -22,6 +23,12 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = "NPC")
 	AAI_BaseNPC* GetNPCRef() const {return NPCRef;}
+	
+	UFUNCTION(BlueprintPure, Category = "Awarness")
+	UAwarenessComponent* GetAwarenessComponent() const {return AwarenessComponent;}
+	
+	UFUNCTION(BlueprintPure, Category = "Alert")
+	UAlertComponent* GetAlertComponent() const {return AlertComponent;}
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void ActorPerceivedUpdate(AActor* UpdatedActor, FAIStimulus Stimulus);
@@ -49,6 +56,12 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 	
 	AAI_BaseNPC* NPCRef;
+	
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UAwarenessComponent* AwarenessComponent;
+	
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UAlertComponent* AlertComponent;
 	
 	FGameplayTag CurrentStatusTag;
 

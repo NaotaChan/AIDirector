@@ -8,6 +8,8 @@
 #include "Navigation/CrowdFollowingComponent.h"
 //#include "Navigation/CrowdFollowingComponent.h"
 #include "GameplayTagsManager.h"
+#include "Components/AlertComponent.h"
+#include "Components/AwarenessComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISense_Sight.h"
 #include "Perception/AISenseConfig_Sight.h"
@@ -15,6 +17,7 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISense_Touch.h"
 #include "Perception/AISenseConfig_Touch.h"
+
 
 
 AAI_BaseController::AAI_BaseController(const FObjectInitializer& ObjectInitializer)
@@ -31,6 +34,11 @@ AAI_BaseController::AAI_BaseController(const FObjectInitializer& ObjectInitializ
 	
 	//Setup AI Perception
 	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception Component"));
+	
+	
+	//Creation of Awareness and Alert Components
+	AwarenessComponent = CreateDefaultSubobject<UAwarenessComponent>(TEXT("Awareness Component"));
+	AlertComponent = CreateDefaultSubobject<UAlertComponent>(TEXT("Alert Component"));
 }
 
 
