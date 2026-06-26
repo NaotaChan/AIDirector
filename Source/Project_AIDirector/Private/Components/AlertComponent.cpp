@@ -23,6 +23,11 @@ void UAlertComponent::InitializeComponent()
 	Super::InitializeComponent();
 }
 
+void UAlertComponent::UpdateAlertedValue(float AlertedDelta)
+{
+	
+}
+
 // Called when the game starts
 void UAlertComponent::BeginPlay()
 {

@@ -18,6 +18,16 @@ public:
 	UAlertComponent();
 		
 	virtual void InitializeComponent() override;
+	
+	UFUNCTION()
+	bool GetCanUpdateAlerted() const {return CanUpdateAlerted;}
+	
+	UFUNCTION()
+	void SetCanUpdateAlerted(bool NewStatus) {CanUpdateAlerted = NewStatus;}
+	
+	UFUNCTION(BlueprintCallable, Category = "Alerted")
+	void UpdateAlertedValue(float AlertedDelta);
+
 
 protected:
 	// Called when the game starts
@@ -33,6 +43,7 @@ private:
 	float AlertedDecreaseValue;
 	float AlertedDecreaseTime;
 	float AlertedPauseTime;
-	float AlertedIncreaseOnHearing;
 	float AlertedIncreaseOnSight;	
+	
+	bool CanUpdateAlerted;
 };

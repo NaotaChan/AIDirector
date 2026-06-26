@@ -18,6 +18,15 @@ public:
 	UAwarnessComponent();
 	
 	virtual void InitializeComponent() override;
+	
+	UFUNCTION()
+	bool GetCanUpdateAwarness() const {return CanUpdateAwarness;}
+	
+	UFUNCTION()
+	void SetCanUpdateAwarness(bool NewStatus) {CanUpdateAwarness = NewStatus;}
+	
+	UFUNCTION(BlueprintCallable, Category = "Awarness")
+	void UpdateAwarnessValue(float AwarnesssDelta);
 
 protected:
 	// Called when the game starts
@@ -35,4 +44,6 @@ private:
 	float AwarnessPauseTime;
 	float AwarnessIncreaseOnHearing;
 	float AwarnessIncreaseOnSight;	
+	
+	bool CanUpdateAwarness;
 };

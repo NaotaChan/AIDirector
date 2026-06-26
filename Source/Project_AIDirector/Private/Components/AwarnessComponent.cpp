@@ -3,6 +3,7 @@
 
 #include "Components/AwarnessComponent.h"
 #include "AI/AI_BaseController.h"
+#include "Components/AlertComponent.h"
 
 
 
@@ -22,6 +23,27 @@ void UAwarnessComponent::InitializeComponent()
 	AICRef = Cast<AAI_BaseController>(GetOwner());
 	
 	Super::InitializeComponent();
+}
+
+void UAwarnessComponent::UpdateAwarnessValue(float AwarnesssDelta)
+{
+	if (IsValid(AICRef) && GetCanUpdateAwarness())
+	{
+		if (AwarnesssDelta > 0)
+		{
+			
+		}
+		
+		CurrentAwarnessValue = FMath::Clamp(CurrentAwarnessValue + AwarnesssDelta, 0.f, MaxAwarnessValue);
+		
+		if (CurrentAwarnessValue >= MaxAwarnessValue)
+		{
+			CurrentAwarnessValue = MaxAwarnessValue;
+			
+			SetCanUpdateAwarness(false);
+			//Activate Alert
+		}
+	}
 }
 
 
