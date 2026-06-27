@@ -39,6 +39,9 @@ void UAwarenessComponent::SetupAwareness()
 		AwarenessPauseTime = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessPauseTime;
 		AwarenessIncreaseOnHearing = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessIncreaseOnHearing;
 		AwarenessIncreaseOnSight = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessIncreaseOnSight;
+		
+		//Start Awareness
+		SetCanUpdateAwareness(true);
 	}
 }
 
