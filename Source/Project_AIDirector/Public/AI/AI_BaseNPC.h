@@ -63,4 +63,19 @@ protected:
 	
 	UPROPERTY()
 	E_AITypes AITypes;
+	
+	//Debug
+	UPROPERTY(EditAnywhere, Category="Debug")
+	bool bShowSenseDebug = false;
+
+	UPROPERTY(EditAnywhere, Category="Debug", meta=(EditCondition="bShowSenseDebug"))
+	bool bShowWalkHearingDebug = true;
+
+	UPROPERTY(EditAnywhere, Category="Debug", meta=(EditCondition="bShowSenseDebug"))
+	bool bShowRunHearingDebug = true;
+
+	UPROPERTY(EditAnywhere, Category="Debug", meta=(EditCondition="bShowSenseDebug"))
+	bool bShowSightDebug = false;
+	
+	void DrawDebugSenses() const;
 };

@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void ActorPerceivedUpdate(AActor* UpdatedActor, FAIStimulus Stimulus);
 	
+	UFUNCTION(BlueprintPure, Category = "Debug | Perception")
+	UAIPerceptionDebugComponent* GetPerceptionDebugComponent() const { return PerceptionDebugComponent; }
+	
 	//Team ID
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 	
@@ -62,6 +65,9 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	UAlertComponent* AlertComponent;
+	
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UAIPerceptionDebugComponent* PerceptionDebugComponent;
 	
 	FGameplayTag CurrentStatusTag;
 

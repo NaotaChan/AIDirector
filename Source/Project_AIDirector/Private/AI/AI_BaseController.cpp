@@ -18,6 +18,7 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISense_Touch.h"
 #include "Perception/AISenseConfig_Touch.h"
+#include "Components/Debug/AIPerceptionDebugComponent.h"
 
 
 
@@ -40,6 +41,9 @@ AAI_BaseController::AAI_BaseController(const FObjectInitializer& ObjectInitializ
 	//Creation of Awareness and Alert Components
 	AwarenessComponent = CreateDefaultSubobject<UAwarenessComponent>(TEXT("Awareness Component"));
 	AlertComponent = CreateDefaultSubobject<UAlertComponent>(TEXT("Alert Component"));
+	
+	//Creation of Perception Debug Component
+	PerceptionDebugComponent = CreateDefaultSubobject<UAIPerceptionDebugComponent>(TEXT("Perception Debug Component"));
 }
 
 

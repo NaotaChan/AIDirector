@@ -5,6 +5,8 @@
 #include "Project_AIDirector/Public/AI/AI_BaseController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AIInfo_DataAsset.h"
+#include "Components/Debug/AIPerceptionDebugComponent.h"
+
 
 // Sets default values
 AAI_BaseNPC::AAI_BaseNPC()
@@ -31,6 +33,17 @@ void AAI_BaseNPC::BeginPlay()
 void AAI_BaseNPC::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+		
+	// Perception Debug
+	if (AICRef && AICRef->GetPerceptionDebugComponent())
+	{
+		AICRef->GetPerceptionDebugComponent()->DrawDebug(
+			AIInfo_DataAsset,
+			GetActorLocation(),
+			GetActorRotation()
+		);
+	}
 }
 
 // Called to bind functionality to input
@@ -59,4 +72,48 @@ void AAI_BaseNPC::ChangeSpeedType(E_AISpeedType NewSpeed)
 				}		
 		}
 	}
+}
+
+
+void AAI_BaseNPC::DrawDebugSenses() const
+{
+	if (!bShowSenseDebug)
+		return;
+
+	if (!AIInfo_DataAsset)
+		return;
+
+	FVector Location = GetActorLocation();
+
+	if (bShowRunHearingDebug)
+	{
+		DrawDebugSphere(
+			GetWorld(),
+			Location,
+			AIInfo_DataAsset->RunHearingRange,
+			32,
+			FColor::Yellow,
+			false,
+			-1.f,
+			0,
+			2.f
+		);
+	}
+
+	if (bShowWalkHearingDebug)
+	{
+		DrawDebugSphere(
+			GetWorld(),
+			Location,
+			AIInfo_DataAsset->WalkHearingRange,
+			32,
+			FColor::Red,
+			false,
+			-1.f,
+			0,
+			2.f
+		);
+	}
+
+	//TODO: Sight Draw Debug
 }
