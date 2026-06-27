@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "AIPerceptionDebugComponent.generated.h"
 
+class UAIInfo_DataAsset;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PROJECT_AIDIRECTOR_API UAIPerceptionDebugComponent : public UActorComponent
