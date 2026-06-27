@@ -3,11 +3,3 @@
 
 #include "Enum/Perception/Sight/Enum_SightConeZones.h"
 
-
-Enum_SightConeZones::Enum_SightConeZones()
-{
-}
-
-Enum_SightConeZones::~Enum_SightConeZones()
-{
-}

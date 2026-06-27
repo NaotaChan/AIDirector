@@ -36,13 +36,30 @@ public:
 	float SightRadius = 700.f; 
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
+	float SightRadius_Wide = 500.f; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
+	float SightRadius_Peripheral = 250.f; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
+	float SightRadius_Backward = 150.f; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
 	float LoseSightRadius = 700.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
-	float LoseSightTimer = 1.f;
+	float PeripheralVisionAngleDegrees = 100.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
-	float PeripheralVisionAngleDegrees = 100.f;
+	float SightPeripheralHalfAngleDegree_Narrow = 20.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
+	float SightPeripheralHalfAngleDegree_Wide = 55.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
+	float SightPeripheralHalfAngleDegree_Peripheral = 90.f;
+	
+	
 	
 	
 	//hearing

@@ -1,15 +1,13 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#pragma once
 
-#pragma once
-
-#include "CoreMinimal.h"
-
-/**
- * 
- */
-class PROJECT_AIDIRECTOR_API Enum_SightConeZones
+//Enum Cone Sight Zones
+UENUM(BlueprintType)
+enum class E_SightConeZones : uint8
 {
-public:
-	Enum_SightConeZones();
-	~Enum_SightConeZones();
+	NONE			UMETA(DisplayName = "None"),
+	NOTSEEN			UMETA(DisplayName = "NotSeen"),
+	BACKWARD		UMETA(DisplayName = "Backward"),
+	PERIPHERAL		UMETA(DisplayName = "Peripheral"),
+	WIDE			UMETA(DisplayName = "Wide"),
+	NARROW			UMETA(DisplayName = "Narrow")
 };

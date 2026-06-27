@@ -37,8 +37,6 @@ void AAI_BaseNPC::BeginPlay()
 		PerceptionDebugComponent->SetIsBlind();
 		PerceptionDebugComponent->SetIsDeaf();
 	}
-	
-	
 }
 
 // Called every frame

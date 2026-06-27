@@ -57,6 +57,11 @@ public:
 	UFUNCTION()
 	void ClearLoseSight();
 	
+	UFUNCTION(BlueprintCallable, Category= "Perception | Sight")
+	E_SightConeZones GetTypeOfSightCone (AActor* UpdatedActor);
+	
+	
+	
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;

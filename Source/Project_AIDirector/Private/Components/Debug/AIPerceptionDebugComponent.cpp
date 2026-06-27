@@ -64,7 +64,36 @@ void UAIPerceptionDebugComponent::DrawDebug(
 		);
 	}
 
-	//TODO: SIGHT
+	//SIGHT
+	if (bDrawSight)
+	{
+		FVector Forward = Rotation.Vector();
+
+		//NARROW
+		DrawDebugCone(World, Location, Forward,
+			Data->SightRadius,
+			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Narrow),
+			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Narrow),
+			16, FColor::Red, false, -1.f, 0, 1.f);
+
+		//WIDE
+		DrawDebugCone(World, Location, Forward,
+			Data->SightRadius_Wide,
+			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Wide),
+			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Wide),
+			16, FColor::Orange, false, -1.f, 0, 1.f);
+
+		//PERIPHERAL
+		DrawDebugCone(World, Location, Forward,
+			Data->SightRadius_Peripheral,
+			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Peripheral),
+			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Peripheral),
+			16, FColor::Yellow, false, -1.f, 0, 1.f);
+
+		// BACKWARD
+		DrawDebugSphere(World, Location, Data->SightRadius_Backward,
+			16, FColor::Green, false, -1.f, 0, 1.f);
+	}
 	
 }
 

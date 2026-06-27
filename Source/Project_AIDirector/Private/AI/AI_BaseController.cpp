@@ -11,6 +11,7 @@
 #include "GameplayTagsManager.h"
 #include "Components/AlertComponent.h"
 #include "Components/AwarenessComponent.h"
+#include "Enum/Perception/Sight/Enum_SightConeZones.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISense_Sight.h"
 #include "Perception/AISenseConfig_Sight.h"
@@ -18,6 +19,7 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISense_Touch.h"
 #include "Perception/AISenseConfig_Touch.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 
@@ -234,6 +236,44 @@ void AAI_BaseController::ClearLoseSight()
 	GetWorld()->GetTimerManager().ClearTimer(LoseSightTimerHandle);
 }
 
+E_SightConeZones AAI_BaseController::GetTypeOfSightCone(AActor* UpdatedActor)
+{
+	if (IsValid(UpdatedActor))
+	{
+		float CurrentDistance = (GetNPCRef()->GetActorLocation() - UpdatedActor->GetActorLocation()).Length();
+		float DotProduct = FVector::DotProduct(GetNPCRef()->GetActorForwardVector(), (UpdatedActor->GetActorLocation() - GetNPCRef()->GetActorLocation()).GetSafeNormal());
+		//DegAcos change from radiant (default returned value) to degrees
+		float AngleTowardsTarget = UKismetMathLibrary::DegAcos(DotProduct);
+		
+		if (DotProduct > 0)
+		{
+			if (AngleTowardsTarget <= GetNPCRef()->GetAIInfo_DataAsset()->SightPeripheralHalfAngleDegree_Narrow)
+			{
+				return E_SightConeZones::NARROW;
+			}
+			else if (AngleTowardsTarget <= GetNPCRef()->GetAIInfo_DataAsset()->SightPeripheralHalfAngleDegree_Wide &&
+						CurrentDistance <= GetNPCRef()->GetAIInfo_DataAsset()->SightRadius_Wide)
+			{
+				return E_SightConeZones::WIDE;
+			}
+			else if (AngleTowardsTarget <= GetNPCRef()->GetAIInfo_DataAsset()->SightPeripheralHalfAngleDegree_Peripheral &&
+						CurrentDistance <= GetNPCRef()->GetAIInfo_DataAsset()->SightRadius_Peripheral)
+			{
+				return E_SightConeZones::PERIPHERAL;
+			}
+		}
+		else
+		{
+			if (CurrentDistance <= GetNPCRef()->GetAIInfo_DataAsset()->SightRadius_Backward)
+			{
+				return E_SightConeZones::BACKWARD;
+			}
+		}
+	}
+	
+	return E_SightConeZones::NOTSEEN;
+}
+
 void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActor, FAIStimulus Stimulus)
 {
 	if (!BrainComponent || !BrainComponent->IsRunning() || !IsValid(UpdatedActor))
@@ -246,27 +286,32 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 	if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
 	{
 		CurrentSenseUsed = E_AISense::SIGHT;
+		E_SightConeZones CurrentTypeOfCone = E_SightConeZones::NONE;
 		
 		if (Stimulus.WasSuccessfullySensed())
 		{
-			GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed);
-			GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed);
+			CurrentTypeOfCone = GetTypeOfSightCone(UpdatedActor);
 			
-			if (CheckCurrentStatusTag(E_AITag::HUNTING))
+			if (CurrentTypeOfCone != E_SightConeZones::NOTSEEN)
 			{
-				UpdateCurrentStatusTag(E_AITag::ALERTED);
+				GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed);
+				GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed);
+			
+				if (CheckCurrentStatusTag(E_AITag::HUNTING))
+				{
+					UpdateCurrentStatusTag(E_AITag::ALERTED);
+				}
+			
+				ClearLoseSight();
 			}
 			
-			ClearLoseSight();
-			
 		}
-		else
+		if (CurrentTypeOfCone == E_SightConeZones::NONE || CurrentTypeOfCone == E_SightConeZones::NOTSEEN)
 		{
 			if (!HasLoseSight)
 			{
 				HasLoseSight = true;
 				GetWorld()->GetTimerManager().SetTimer(LoseSightTimerHandle, this, &AAI_BaseController::OnLoseSightTimerFinished, GetNPCRef()->GetAIInfo_DataAsset()->LoseSightTimer,false);
-				
 			}
 		}
 		
