@@ -81,7 +81,7 @@ void UAIPerceptionDebugComponent::DrawDebug(
 			Data->SightRadius_Wide,
 			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Wide),
 			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Wide),
-			16, FColor::Orange, false, -1.f, 0, 1.f);
+			16, FColor::Blue, false, -1.f, 0, 1.f);
 
 		//PERIPHERAL
 		DrawDebugCone(World, Location, Forward,
