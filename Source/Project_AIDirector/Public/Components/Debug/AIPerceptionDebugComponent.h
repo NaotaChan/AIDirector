@@ -41,9 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Debug | Perception", meta=(EditCondition="bEnableDebug"))
 	bool bDrawSight = true;
 	
-	UPROPERTY(EditAnywhere, Category="Debug | Perception | Sight")
+	UPROPERTY(EditAnywhere, Category="Debug | Perception Remover | Sight")
 	bool bIsBlind = false;
 	
-	UPROPERTY(EditAnywhere, Category="Debug | Perception | Hearing")
+	UPROPERTY(EditAnywhere, Category="Debug | Perception Remover | Hearing")
 	bool bIsDeaf = false;
 };

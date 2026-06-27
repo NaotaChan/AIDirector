@@ -21,10 +21,10 @@ AAI_BaseNPC::AAI_BaseNPC()
 
 // Called when the game starts or when spawned
 void AAI_BaseNPC::BeginPlay()
-{	
-	Super::BeginPlay();
-	
+{		
 	AICRef = Cast<AAI_BaseController>(GetController());
+	
+	Super::BeginPlay();
 	
 	if(GetAIInfo_DataAsset())
 	{
