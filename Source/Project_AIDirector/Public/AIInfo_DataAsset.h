@@ -48,6 +48,9 @@ public:
 	float LoseSightRadius = 700.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
+	float LoseSightTimer = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
 	float PeripheralVisionAngleDegrees = 100.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
@@ -76,7 +79,7 @@ public:
 	float MaxAwarenessValue = 100.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Setup")
-	float AwarenessDecreaseValue = 1.f;
+	float AwarenessDecreaseValue = 5.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Setup")
 	float AwarenessDecreaseTime = 1.f;
@@ -85,10 +88,19 @@ public:
 	float AwarenessPauseTime = 2.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Hearing")
-	float AwarenessIncreaseOnHearing = 5.f;
+	float AwarenessIncreaseOnHearing = 20.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Sight")
-	float AwarenessIncreaseOnSight = 15.f;
+	float AwarenessIncreaseOnSight_Narrow = 20.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Sight")
+	float AwarenessIncreaseOnSight_Wide = 10.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Sight")
+	float AwarenessIncreaseOnSight_Peripheral = 5.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Awareness | Sight")
+	float AwarenessIncreaseOnSight_Backward = 2.f;
 	
 	//Alert
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Setup")
@@ -101,9 +113,18 @@ public:
 	float AlertDecreaseTime = 0.5f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Setup")
-	float AlertPauseTime = 1.f;
+	float AlertPauseTime = 0.5f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Sight")
-	float AlertIncreaseOnSight = 20.f;
+	float AlertIncreaseOnSight_Narrow = 15.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Sight")
+	float AlertIncreaseOnSight_Wide = 10.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Sight")
+	float AlertIncreaseOnSight_Peripheral = 5.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Sight")
+	float AlertIncreaseOnSight_Backward = 2.f;
 
 };

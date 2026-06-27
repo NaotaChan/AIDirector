@@ -294,8 +294,8 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 			
 			if (CurrentTypeOfCone != E_SightConeZones::NOTSEEN)
 			{
-				GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed);
-				GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed);
+				GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed, false, CurrentTypeOfCone);
+				GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed, CurrentTypeOfCone);
 			
 				if (CheckCurrentStatusTag(E_AITag::HUNTING))
 				{

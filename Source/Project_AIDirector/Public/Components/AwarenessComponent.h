@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Enum/Perception/Sight/Enum_SightConeZones.h"
 #include "AwarenessComponent.generated.h"
 
 class AAI_BaseController;
@@ -41,7 +42,7 @@ public:
 	void SetIsDecreasing(bool NewStatus) {IsDecreasing = NewStatus;}
 	
 	UFUNCTION(BlueprintCallable, Category = "Awareness")
-	void UpdateAwarenessValueFromSense(E_AISense InputSense, bool IsFromWhistle = false);
+	void UpdateAwarenessValueFromSense(E_AISense InputSense, bool IsFromWhistle = false, E_SightConeZones CurrentTypeOfCone = E_SightConeZones::NONE);
 	
 	UFUNCTION(BlueprintCallable, Category = "Awareness")
 	void UpdateAwarenessValue(float AwarenessDelta);
@@ -54,6 +55,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Awareness")
 	void ResetAwareness();
+	
+	float GetCorrectSightAwareness(E_SightConeZones SightConeType);
 
 protected:
 	// Called when the game starts
@@ -74,7 +77,11 @@ private:
 	float AwarenessDecreaseTime;
 	float AwarenessPauseTime;
 	float AwarenessIncreaseOnHearing;
-	float AwarenessIncreaseOnSight;	
+	float AwarenessIncreaseOnSight_Narrow;
+	float AwarenessIncreaseOnSight_Wide;	
+	float AwarenessIncreaseOnSight_Peripheral;	
+	float AwarenessIncreaseOnSight_Backward;	
+
 	
 	bool CanUpdateAwareness;
 	bool IsDecreasing;

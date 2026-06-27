@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Enum/Perception/Sight/Enum_SightConeZones.h"
 #include "AlertComponent.generated.h"
 
 class AAI_BaseController;
@@ -35,7 +36,7 @@ public:
 	void SetCanUpdateAlert(bool NewStatus) {CanUpdateAlert = NewStatus;}
 	
 	UFUNCTION(BlueprintCallable, Category = "Alert")
-	void UpdateAlertValueFromSense(E_AISense InputSense);
+	void UpdateAlertValueFromSense(E_AISense InputSense, E_SightConeZones CurrentTypeOfCone = E_SightConeZones::NONE);
 	
 	UFUNCTION(BlueprintCallable, Category = "Alert")
 	void UpdateAlertValue(float AlertDelta, bool IsFromTouching = false);
@@ -54,6 +55,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Alert")
 	void ResetAlert(bool ResetAwareness = true);
+	
+	float GetCorrectSightAlert(E_SightConeZones SightConeType);
 
 
 protected:
@@ -74,7 +77,10 @@ private:
 	float AlertDecreaseValue;
 	float AlertDecreaseTime;
 	float AlertPauseTime;
-	float AlertIncreaseOnSight;	
+	float AlertIncreaseOnSight_Narrow;
+	float AlertIncreaseOnSight_Wide;	
+	float AlertIncreaseOnSight_Peripheral;	
+	float AlertIncreaseOnSight_Backward;	;	
 	
 	bool CanUpdateAlert;
 	bool IsDecreasing;

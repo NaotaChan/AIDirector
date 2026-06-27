@@ -37,17 +37,20 @@ void UAlertComponent::SetupAlert()
 		AlertDecreaseValue = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AlertDecreaseValue;
 		AlertDecreaseTime = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AlertDecreaseTime;
 		AlertPauseTime = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AlertPauseTime;
-		AlertIncreaseOnSight = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AlertIncreaseOnSight;
+		AlertIncreaseOnSight_Narrow = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AlertIncreaseOnSight_Narrow;
+		AlertIncreaseOnSight_Wide = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AlertIncreaseOnSight_Wide;
+		AlertIncreaseOnSight_Peripheral = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AlertIncreaseOnSight_Peripheral;
+		AlertIncreaseOnSight_Backward = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AlertIncreaseOnSight_Backward;
 	}
 }
 
-void UAlertComponent::UpdateAlertValueFromSense(E_AISense InputSense)
+void UAlertComponent::UpdateAlertValueFromSense(E_AISense InputSense, E_SightConeZones CurrentTypeOfCone)
 {
 	switch (InputSense)
 	{
 	case E_AISense::SIGHT:
 		{
-			UpdateAlertValue(AlertIncreaseOnSight);
+			UpdateAlertValue(GetCorrectSightAlert(CurrentTypeOfCone));
 			break;
 		}
 	case E_AISense::HEARING:
@@ -146,6 +149,33 @@ void UAlertComponent::ResetAlert(bool ResetAwareness)
 	if (ResetAwareness)
 	{
 		AICRef->GetAwarenessComponent()->ResetAwareness();
+	}
+}
+
+float UAlertComponent::GetCorrectSightAlert(E_SightConeZones SightConeType)
+{
+	switch (SightConeType)
+	{
+	case E_SightConeZones::NARROW:
+		{
+			return AlertIncreaseOnSight_Narrow;
+		}
+	case E_SightConeZones::WIDE:
+		{
+			return AlertIncreaseOnSight_Wide;
+		}
+	case E_SightConeZones::PERIPHERAL:
+		{
+			return AlertIncreaseOnSight_Peripheral;
+		}
+	case E_SightConeZones::BACKWARD:
+		{
+			return AlertIncreaseOnSight_Backward;
+		}
+	default:
+		{
+			return 0.f;
+		}
 	}
 }
 

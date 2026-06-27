@@ -38,20 +38,23 @@ void UAwarenessComponent::SetupAwareness()
 		AwarenessDecreaseTime = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessDecreaseTime;
 		AwarenessPauseTime = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessPauseTime;
 		AwarenessIncreaseOnHearing = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessIncreaseOnHearing;
-		AwarenessIncreaseOnSight = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessIncreaseOnSight;
+		AwarenessIncreaseOnSight_Narrow = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessIncreaseOnSight_Narrow;
+		AwarenessIncreaseOnSight_Wide = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessIncreaseOnSight_Wide;
+		AwarenessIncreaseOnSight_Peripheral = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessIncreaseOnSight_Peripheral;
+		AwarenessIncreaseOnSight_Backward = AICRef->GetNPCRef()->GetAIInfo_DataAsset()->AwarenessIncreaseOnSight_Backward ;
 		
 		//Start Awareness
 		SetCanUpdateAwareness(true);
 	}
 }
 
-void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense, bool IsFromWhistle)
+void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense, bool IsFromWhistle, E_SightConeZones CurrentTypeOfCone)
 {
 	switch (InputSense)
 	{
 	case E_AISense::SIGHT:
 		{
-			UpdateAwarenessValue(AwarenessIncreaseOnSight);
+			UpdateAwarenessValue(GetCorrectSightAwareness(CurrentTypeOfCone));
 			break;
 		}
 	case E_AISense::HEARING:
@@ -144,6 +147,33 @@ void UAwarenessComponent::ResetAwareness()
 	//TODO: In the future implement an AWARE status
 	
 	AICRef->UpdateCurrentStatusTag(E_AITag::UNAWARE);
+}
+
+float UAwarenessComponent::GetCorrectSightAwareness(E_SightConeZones SightConeType)
+{
+	switch (SightConeType)
+	{
+	case E_SightConeZones::NARROW:
+		{
+			return AwarenessIncreaseOnSight_Narrow;
+		}
+	case E_SightConeZones::WIDE:
+		{
+			return AwarenessIncreaseOnSight_Wide;
+		}
+	case E_SightConeZones::PERIPHERAL:
+		{
+			return AwarenessIncreaseOnSight_Peripheral;
+		}
+	case E_SightConeZones::BACKWARD:
+		{
+			return AwarenessIncreaseOnSight_Backward;
+		}
+	default:
+		{
+			return 0.f;
+		}
+	}
 }
 
 // Called when the game starts
