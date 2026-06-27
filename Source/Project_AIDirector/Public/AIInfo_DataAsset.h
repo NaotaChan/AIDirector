@@ -39,6 +39,9 @@ public:
 	float LoseSightRadius = 700.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
+	float LoseSightTimer = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight")
 	float PeripheralVisionAngleDegrees = 100.f;
 	
 	

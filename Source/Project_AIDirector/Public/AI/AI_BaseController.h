@@ -51,6 +51,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category= "AI Status")
 	bool CheckCurrentStatusTag(E_AITag TagToCheck);
 	
+	UFUNCTION()
+	void OnLoseSightTimerFinished();
+	
+	UFUNCTION()
+	void ClearLoseSight();
+	
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
@@ -64,5 +70,9 @@ protected:
 	UAlertComponent* AlertComponent;
 	
 	FGameplayTag CurrentStatusTag;
+	
+	bool HasLoseSight = false;
+	
+	FTimerHandle LoseSightTimerHandle;
 
 };

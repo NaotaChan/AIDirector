@@ -18,7 +18,6 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISense_Touch.h"
 #include "Perception/AISenseConfig_Touch.h"
-#include "Components/Debug/AIPerceptionDebugComponent.h"
 
 
 
@@ -216,6 +215,25 @@ bool AAI_BaseController::CheckCurrentStatusTag(E_AITag TagToCheck)
 	return false;
 }
 
+void AAI_BaseController::OnLoseSightTimerFinished()
+{
+	if (HasLoseSight)
+	{
+		if (CheckCurrentStatusTag(E_AITag::ALERTED))
+		{
+			UpdateCurrentStatusTag(E_AITag::HUNTING);
+		}
+	}
+	
+	ClearLoseSight();
+}
+
+void AAI_BaseController::ClearLoseSight()
+{
+	HasLoseSight = false;
+	GetWorld()->GetTimerManager().ClearTimer(LoseSightTimerHandle);
+}
+
 void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActor, FAIStimulus Stimulus)
 {
 	if (!BrainComponent || !BrainComponent->IsRunning() || !IsValid(UpdatedActor))
@@ -233,6 +251,23 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 		{
 			GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed);
 			GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed);
+			
+			if (CheckCurrentStatusTag(E_AITag::HUNTING))
+			{
+				UpdateCurrentStatusTag(E_AITag::ALERTED);
+			}
+			
+			ClearLoseSight();
+			
+		}
+		else
+		{
+			if (!HasLoseSight)
+			{
+				HasLoseSight = true;
+				GetWorld()->GetTimerManager().SetTimer(LoseSightTimerHandle, this, &AAI_BaseController::OnLoseSightTimerFinished, GetNPCRef()->GetAIInfo_DataAsset()->LoseSightTimer,false);
+				
+			}
 		}
 		
 	}
