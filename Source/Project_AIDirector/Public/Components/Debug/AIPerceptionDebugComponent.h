@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "AIPerceptionDebugComponent.generated.h"
 
+class AAI_BaseController;
 class UAIInfo_DataAsset;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -18,18 +19,31 @@ public:
 	UAIPerceptionDebugComponent();
 
 	void DrawDebug(const UAIInfo_DataAsset* Data, const FVector& Location, const FRotator& Rotation);
+		
+	void SetControllerRef(AAI_BaseController* Controller) { ControllerRef = Controller; }
+		
+	void SetIsBlind ();
+	void SetIsDeaf ();
 
 protected:
 	
 	virtual void BeginPlay() override;
 	
+	UPROPERTY()
+	AAI_BaseController* ControllerRef;
 
 	UPROPERTY(EditAnywhere, Category="Debug | Perception")
 	bool bEnableDebug = false;
 
-	UPROPERTY(EditAnywhere, Category="Debug | Perception")
+	UPROPERTY(EditAnywhere, Category="Debug | Perception", meta=(EditCondition="bEnableDebug"))
 	bool bDrawHearing = true;
 
-	UPROPERTY(EditAnywhere, Category="Debug | Perception")
+	UPROPERTY(EditAnywhere, Category="Debug | Perception", meta=(EditCondition="bEnableDebug"))
 	bool bDrawSight = true;
+	
+	UPROPERTY(EditAnywhere, Category="Debug | Perception | Sight")
+	bool bIsBlind = false;
+	
+	UPROPERTY(EditAnywhere, Category="Debug | Perception | Hearing")
+	bool bIsDeaf = false;
 };

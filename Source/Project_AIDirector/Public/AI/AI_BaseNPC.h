@@ -12,6 +12,7 @@
 class AAI_BaseController;
 class AAIWaypoint;
 class UAIInfo_DataAsset;
+class UAIPerceptionDebugComponent;
 
 UCLASS()
 class PROJECT_AIDIRECTOR_API AAI_BaseNPC : public ACharacter
@@ -40,6 +41,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Movement")
 	E_AISpeedType GetCurrentSpeedType() const {return CurrentSpeedType;}
 	
+	UFUNCTION(BlueprintPure, Category = "Debug | Perception")
+	UAIPerceptionDebugComponent* GetPerceptionDebugComponent() const { return PerceptionDebugComponent; }
+	
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void ChangeSpeedType(E_AISpeedType NewSpeed);
 	
@@ -58,24 +62,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data Asset")
 	UAIInfo_DataAsset* AIInfo_DataAsset;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Debug | Perception")
+	UAIPerceptionDebugComponent* PerceptionDebugComponent;
+	
 	UPROPERTY()
 	E_AISpeedType CurrentSpeedType;
 	
 	UPROPERTY()
 	E_AITypes AITypes;
-	
-	//Debug
-	UPROPERTY(EditAnywhere, Category="Debug")
-	bool bShowSenseDebug = false;
-
-	UPROPERTY(EditAnywhere, Category="Debug", meta=(EditCondition="bShowSenseDebug"))
-	bool bShowWalkHearingDebug = true;
-
-	UPROPERTY(EditAnywhere, Category="Debug", meta=(EditCondition="bShowSenseDebug"))
-	bool bShowRunHearingDebug = true;
-
-	UPROPERTY(EditAnywhere, Category="Debug", meta=(EditCondition="bShowSenseDebug"))
-	bool bShowSightDebug = false;
-	
-	void DrawDebugSenses() const;
 };

@@ -13,19 +13,31 @@ AAI_BaseNPC::AAI_BaseNPC()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	//Creation of Perception Debug Component
+	PerceptionDebugComponent = CreateDefaultSubobject<UAIPerceptionDebugComponent>(TEXT("Perception Debug Component"));
 }
 
 
 // Called when the game starts or when spawned
 void AAI_BaseNPC::BeginPlay()
 {	
-	AICRef = Cast<AAI_BaseController>(GetController());
 	Super::BeginPlay();
+	
+	AICRef = Cast<AAI_BaseController>(GetController());
 	
 	if(GetAIInfo_DataAsset())
 	{
 		AITypes = GetAIInfo_DataAsset()->AITypes;
 	}
+	
+	if (PerceptionDebugComponent && AICRef)
+	{
+		PerceptionDebugComponent->SetControllerRef(AICRef);
+		PerceptionDebugComponent->SetIsBlind();
+		PerceptionDebugComponent->SetIsDeaf();
+	}
+	
 	
 }
 
@@ -36,9 +48,9 @@ void AAI_BaseNPC::Tick(float DeltaTime)
 	
 		
 	// Perception Debug
-	if (AICRef && AICRef->GetPerceptionDebugComponent())
+	if (IsValid(GetPerceptionDebugComponent()))
 	{
-		AICRef->GetPerceptionDebugComponent()->DrawDebug(
+		GetPerceptionDebugComponent()->DrawDebug(
 			AIInfo_DataAsset,
 			GetActorLocation(),
 			GetActorRotation()
@@ -72,48 +84,4 @@ void AAI_BaseNPC::ChangeSpeedType(E_AISpeedType NewSpeed)
 				}		
 		}
 	}
-}
-
-
-void AAI_BaseNPC::DrawDebugSenses() const
-{
-	if (!bShowSenseDebug)
-		return;
-
-	if (!AIInfo_DataAsset)
-		return;
-
-	FVector Location = GetActorLocation();
-
-	if (bShowRunHearingDebug)
-	{
-		DrawDebugSphere(
-			GetWorld(),
-			Location,
-			AIInfo_DataAsset->RunHearingRange,
-			32,
-			FColor::Yellow,
-			false,
-			-1.f,
-			0,
-			2.f
-		);
-	}
-
-	if (bShowWalkHearingDebug)
-	{
-		DrawDebugSphere(
-			GetWorld(),
-			Location,
-			AIInfo_DataAsset->WalkHearingRange,
-			32,
-			FColor::Red,
-			false,
-			-1.f,
-			0,
-			2.f
-		);
-	}
-
-	//TODO: Sight Draw Debug
 }
