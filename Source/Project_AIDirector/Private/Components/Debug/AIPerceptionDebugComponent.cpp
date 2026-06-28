@@ -1,5 +1,5 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+//component maade with the help of AI
 
 #include "Components/Debug/AIPerceptionDebugComponent.h"
 #include "AIInfo_DataAsset.h"
@@ -21,6 +21,37 @@ void UAIPerceptionDebugComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
+static void DrawDebug2DSector(const UWorld* World, const FVector& Center, const FVector& Direction, float Radius, float HalfAngleDegrees, const FColor& Color, float HeightOffset = 5.f)
+{
+	FVector DrawCenter = Center + FVector(0.f, 0.f, HeightOffset);
+    
+	//Segments
+	int32 Segments = FMath::Max(10, FMath::CeilToInt(HalfAngleDegrees / 2.0f)); 
+    
+	FVector Forward = Direction.GetSafeNormal2D();
+	FRotator Rot = Forward.Rotation();
+
+	float StartAngle = Rot.Yaw - HalfAngleDegrees;
+	float AngleStep = (HalfAngleDegrees * 2.0f) / Segments;
+
+	//Calculate the first point of the arc
+	FVector PrevPoint = DrawCenter + FRotator(0, StartAngle, 0).Vector() * Radius;
+    
+	//Left side of the cone
+	DrawDebugLine(World, DrawCenter, PrevPoint, Color, false, -1.f, 0, 2.f);
+
+	// Disegna l'arco
+	for (int32 i = 1; i <= Segments; ++i)
+	{
+		FVector NextPoint = DrawCenter + FRotator(0, StartAngle + (i * AngleStep), 0).Vector() * Radius;
+		DrawDebugLine(World, PrevPoint, NextPoint, Color, false, -1.f, 0, 2.f);
+		PrevPoint = NextPoint;
+	}
+
+	//Right side of the cone
+	DrawDebugLine(World, PrevPoint, DrawCenter, Color, false, -1.f, 0, 2.f);
+}
+
 
 void UAIPerceptionDebugComponent::DrawDebug(
 	const UAIInfo_DataAsset* Data,
@@ -34,33 +65,45 @@ void UAIPerceptionDebugComponent::DrawDebug(
 	if (!World)
 		return;
 	
+	//Debug Circle
+	//Vert offset to lift the hoop off the ground
+	FVector DrawLoc = Location + FVector(0.f, 0.f, 5.f);
+	
+	//Vectors defining the horizontal plane for DrawDebugCircle
+	FVector YAxis = FVector::RightVector;
+	FVector ZAxis = FVector::ForwardVector;
+	
 	//HEARING
 	if (bDrawHearing)
 	{
-		DrawDebugCylinder(
+		DrawDebugCircle(
 			World,
-			Location,
-			Location + FVector(0.f, 0.f, 5.f),
+			DrawLoc,
 			Data->WalkHearingRange,
 			32,
-			FColor::Yellow,
-			false,
-			-1.f,
-			0,
-			2.f
+			FColor::Red, 
+			false, 
+			-1.f, 
+			0, 
+			2.f, 
+			YAxis, 
+			ZAxis, 
+			false
 		);
-
-		DrawDebugCylinder(
+		
+		DrawDebugCircle(
 			World,
-			Location,
-			Location + FVector(0.f, 0.f, 5.f),
+			DrawLoc,
 			Data->RunHearingRange,
 			32,
-			FColor::Red,
-			false,
-			-1.f,
-			0,
-			2.f
+			FColor::Yellow, 
+			false, 
+			-1.f, 
+			0, 
+			2.f, 
+			YAxis, 
+			ZAxis, 
+			false
 		);
 	}
 
@@ -69,30 +112,17 @@ void UAIPerceptionDebugComponent::DrawDebug(
 	{
 		FVector Forward = Rotation.Vector();
 
-		//NARROW
-		DrawDebugCone(World, Location, Forward,
-			Data->SightRadius,
-			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Narrow),
-			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Narrow),
-			16, FColor::Red, false, -1.f, 0, 1.f);
+		// NARROW
+		DrawDebug2DSector(World, Location, Forward, Data->SightRadius, Data->SightPeripheralHalfAngleDegree_Narrow, FColor::Red);
 
-		//WIDE
-		DrawDebugCone(World, Location, Forward,
-			Data->SightRadius_Wide,
-			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Wide),
-			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Wide),
-			16, FColor::Blue, false, -1.f, 0, 1.f);
+		// WIDE
+		DrawDebug2DSector(World, Location, Forward, Data->SightRadius_Wide, Data->SightPeripheralHalfAngleDegree_Wide, FColor::Blue);
 
-		//PERIPHERAL
-		DrawDebugCone(World, Location, Forward,
-			Data->SightRadius_Peripheral,
-			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Peripheral),
-			FMath::DegreesToRadians(Data->SightPeripheralHalfAngleDegree_Peripheral),
-			16, FColor::Yellow, false, -1.f, 0, 1.f);
+		// PERIPHERAL
+		DrawDebug2DSector(World, Location, Forward, Data->SightRadius_Peripheral, Data->SightPeripheralHalfAngleDegree_Peripheral, FColor::Yellow);
 
 		// BACKWARD
-		DrawDebugSphere(World, Location, Data->SightRadius_Backward,
-			16, FColor::Green, false, -1.f, 0, 1.f);
+		DrawDebugCircle(World, DrawLoc, Data->SightRadius_Backward, 32, FColor::Green, false, -1.f, 0, 2.f, YAxis, ZAxis, false);
 	}
 	
 }
@@ -129,6 +159,5 @@ void UAIPerceptionDebugComponent::SetIsDeaf()
 	ConfigHearing->HearingRange = 0.f;
 	Perception->RequestStimuliListenerUpdate();
 }
-
 
 

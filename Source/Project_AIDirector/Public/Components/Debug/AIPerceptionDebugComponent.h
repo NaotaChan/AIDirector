@@ -1,4 +1,5 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
+//component maade with the help of AI
 
 #pragma once
 
