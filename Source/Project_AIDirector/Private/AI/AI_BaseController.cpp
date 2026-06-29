@@ -20,7 +20,7 @@
 #include "Perception/AISense_Touch.h"
 #include "Perception/AISenseConfig_Touch.h"
 #include "Kismet/KismetMathLibrary.h"
-
+#include "Struct/Perception/Sight/SightConeResult.h"
 
 
 AAI_BaseController::AAI_BaseController(const FObjectInitializer& ObjectInitializer)
@@ -236,11 +236,15 @@ void AAI_BaseController::ClearLoseSight()
 	GetWorld()->GetTimerManager().ClearTimer(LoseSightTimerHandle);
 }
 
-E_SightConeZones AAI_BaseController::GetTypeOfSightCone(AActor* UpdatedActor)
+FSightConeResult AAI_BaseController::GetTypeOfSightCone(AActor* UpdatedActor)
 {
-	if (IsValid(UpdatedActor))
+	FSightConeResult Result;
+	
+	if (IsValid(UpdatedActor) && GetNPCRef())
 	{
-		float CurrentDistance = (GetNPCRef()->GetActorLocation() - UpdatedActor->GetActorLocation()).Length();
+		//float CurrentDistance = (GetNPCRef()->GetActorLocation() - UpdatedActor->GetActorLocation()).Length();
+		Result.PlayerDistance = (GetNPCRef()->GetActorLocation() - UpdatedActor->GetActorLocation()).Length();
+		
 		float DotProduct = FVector::DotProduct(GetNPCRef()->GetActorForwardVector(), (UpdatedActor->GetActorLocation() - GetNPCRef()->GetActorLocation()).GetSafeNormal());
 		//DegAcos change from radiant (default returned value) to degrees
 		float AngleTowardsTarget = UKismetMathLibrary::DegAcos(DotProduct);
@@ -249,29 +253,29 @@ E_SightConeZones AAI_BaseController::GetTypeOfSightCone(AActor* UpdatedActor)
 		{
 			if (AngleTowardsTarget <= GetNPCRef()->GetAIInfo_DataAsset()->SightPeripheralHalfAngleDegree_Narrow)
 			{
-				return E_SightConeZones::NARROW;
+				Result.ConeZone = E_SightConeZones::NARROW;
 			}
 			else if (AngleTowardsTarget <= GetNPCRef()->GetAIInfo_DataAsset()->SightPeripheralHalfAngleDegree_Wide &&
-						CurrentDistance <= GetNPCRef()->GetAIInfo_DataAsset()->SightRadius_Wide)
+					 Result.PlayerDistance <= GetNPCRef()->GetAIInfo_DataAsset()->SightRadius_Wide)
 			{
-				return E_SightConeZones::WIDE;
+				Result.ConeZone = E_SightConeZones::WIDE;
 			}
 			else if (AngleTowardsTarget <= GetNPCRef()->GetAIInfo_DataAsset()->SightPeripheralHalfAngleDegree_Peripheral &&
-						CurrentDistance <= GetNPCRef()->GetAIInfo_DataAsset()->SightRadius_Peripheral)
+					 Result.PlayerDistance <= GetNPCRef()->GetAIInfo_DataAsset()->SightRadius_Peripheral)
 			{
-				return E_SightConeZones::PERIPHERAL;
+				Result.ConeZone = E_SightConeZones::PERIPHERAL;
 			}
 		}
 		else
 		{
-			if (CurrentDistance <= GetNPCRef()->GetAIInfo_DataAsset()->SightRadius_Backward)
+			if (Result.PlayerDistance <= GetNPCRef()->GetAIInfo_DataAsset()->SightRadius_Backward)
 			{
-				return E_SightConeZones::BACKWARD;
+				Result.ConeZone = E_SightConeZones::BACKWARD;
 			}
 		}
 	}
 	
-	return E_SightConeZones::NOTSEEN;
+	return Result;
 }
 
 void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActor, FAIStimulus Stimulus)
@@ -290,12 +294,44 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 		
 		if (Stimulus.WasSuccessfullySensed())
 		{
-			CurrentTypeOfCone = GetTypeOfSightCone(UpdatedActor);
+			//Get Player Distance and Cone already Calculated
+			FSightConeResult SightResult = GetTypeOfSightCone(UpdatedActor);
+			CurrentTypeOfCone = SightResult.ConeZone;
 			
 			if (CurrentTypeOfCone != E_SightConeZones::NOTSEEN)
 			{
-				GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed, false, CurrentTypeOfCone);
-				GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed, CurrentTypeOfCone);
+				float DistanceMultiplier = 1.0;
+				
+				if (GetNPCRef() && GetNPCRef()->GetAIInfo_DataAsset())
+				{
+					const UAIInfo_DataAsset* Data = GetNPCRef()->GetAIInfo_DataAsset();
+                
+					//Maximum radius based on the cone to scale the proportion
+					float MaxConeRange = Data->SightRadius;
+					switch (CurrentTypeOfCone)
+					{
+					case E_SightConeZones::NARROW:       MaxConeRange = Data->SightRadius; break;
+					case E_SightConeZones::WIDE:         MaxConeRange = Data->SightRadius_Wide; break;
+					case E_SightConeZones::PERIPHERAL:   MaxConeRange = Data->SightRadius_Peripheral; break;
+					case E_SightConeZones::BACKWARD:     MaxConeRange = Data->SightRadius_Backward; break;
+					default: break;
+					}
+                
+					//Dynamic multiplier calculation based on distances and data asset parameters
+					DistanceMultiplier = FMath::GetMappedRangeValueClamped(
+						FVector2D(0.0f, MaxConeRange),
+						FVector2D(Data->SightMultiplier_Max, Data->SightMultiplier_Min),
+						SightResult.PlayerDistance
+					);
+					//DEBUG
+					if (GEngine)
+					{
+						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Sight Distance Multiplier: %f"), DistanceMultiplier));
+					}
+				}
+				
+				GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed, false, CurrentTypeOfCone, DistanceMultiplier);
+				GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed, CurrentTypeOfCone, DistanceMultiplier);
 			
 				if (CheckCurrentStatusTag(E_AITag::HUNTING))
 				{
@@ -322,13 +358,54 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 		
 		if (Stimulus.WasSuccessfullySensed())
 		{
+			//Calculate Noise Distance
+			float SoundDistance = (GetNPCRef()->GetActorLocation() - Stimulus.StimulusLocation).Size();
+			float MaxHearingRange = GetNPCRef()->GetAIInfo_DataAsset()->RunHearingRange; //Default RUN Range
+          
+			if (Stimulus.Tag == "Walk")
+			{
+				MaxHearingRange = GetNPCRef()->GetAIInfo_DataAsset()->WalkHearingRange;
+			}
+			
 			
 			if (Stimulus.Tag == "Run" ||
 					Stimulus.Tag == "Whistle" ||
 						Stimulus.Tag == "Walk" &&
 						(GetNPCRef()->GetActorLocation() - Stimulus.StimulusLocation).Size() <= GetNPCRef()->GetAIInfo_DataAsset()->WalkHearingRange)
 			{
-				GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed, (Stimulus.Tag == "Whistle" ? true : false));
+				float HearingMultiplier = 1.0f;
+             
+				if (GetNPCRef() && GetNPCRef()->GetAIInfo_DataAsset())
+				{
+					const UAIInfo_DataAsset* Data = GetNPCRef()->GetAIInfo_DataAsset();
+					
+					//Map the distances
+					HearingMultiplier = FMath::GetMappedRangeValueClamped(
+				   FVector2D(0.0f, MaxHearingRange),
+				   FVector2D(Data->HearingMultiplier_Max, Data->HearingMultiplier_Min),
+					SoundDistance
+				);
+					
+					//DEBUG
+					if (GEngine)
+					{
+						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Sound Distance: %f"), SoundDistance));
+					}
+				}
+             
+				//Pass the hearing multiplier
+				GetAwarenessComponent()->UpdateAwarenessValueFromSense(
+				   CurrentSenseUsed, 
+				   (Stimulus.Tag == "Whistle" ? true : false), 
+				   E_SightConeZones::NONE, 
+				   HearingMultiplier
+				);
+				
+				//DEBUG
+				if (GEngine)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hearing Multiplier: %f"), HearingMultiplier));
+				}
 			}
 		}
 		
@@ -344,3 +421,4 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 		}
 	}
 }
+

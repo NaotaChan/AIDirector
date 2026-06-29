@@ -48,13 +48,18 @@ void UAwarenessComponent::SetupAwareness()
 	}
 }
 
-void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense, bool IsFromWhistle, E_SightConeZones CurrentTypeOfCone)
+void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense, bool IsFromWhistle, E_SightConeZones CurrentTypeOfCone, float DistanceMultiplier)
 {
 	switch (InputSense)
 	{
 	case E_AISense::SIGHT:
 		{
-			UpdateAwarenessValue(GetCorrectSightAwareness(CurrentTypeOfCone));
+			//Retrieve the base value that depends on the cone 
+			float BaseIncrease = GetCorrectSightAwareness(CurrentTypeOfCone);
+			//Multiply it by the distance multiplier (e.g., 10.0 * 0.5 = 5.0)
+			float FinalIncrease = BaseIncrease * DistanceMultiplier;
+			
+			UpdateAwarenessValue(FinalIncrease);
 			break;
 		}
 	case E_AISense::HEARING:

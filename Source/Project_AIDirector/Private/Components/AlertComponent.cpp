@@ -44,13 +44,18 @@ void UAlertComponent::SetupAlert()
 	}
 }
 
-void UAlertComponent::UpdateAlertValueFromSense(E_AISense InputSense, E_SightConeZones CurrentTypeOfCone)
+void UAlertComponent::UpdateAlertValueFromSense(E_AISense InputSense, E_SightConeZones CurrentTypeOfCone, float DistanceMultiplier)
 {
 	switch (InputSense)
 	{
 	case E_AISense::SIGHT:
 		{
-			UpdateAlertValue(GetCorrectSightAlert(CurrentTypeOfCone));
+			//Retrieve the base value that depends on the cone 
+			float BaseIncrease = GetCorrectSightAlert(CurrentTypeOfCone);
+			//Multiply it by the distance multiplier (e.g., 10.0 * 0.5 = 5.0)
+			float FinalIncrease = BaseIncrease * DistanceMultiplier;
+			
+			UpdateAlertValue(FinalIncrease);
 			break;
 		}
 	case E_AISense::HEARING:

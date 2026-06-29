@@ -3,13 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Enum/Perception/Sight/Enum_SightConeZones.h"
+#include "SightConeResult.generated.h"
 
-/**
- * 
- */
-class PROJECT_AIDIRECTOR_API SightConeResult
+USTRUCT(BlueprintType)
+struct FSightConeResult
 {
-public:
-	SightConeResult();
-	~SightConeResult();
+	GENERATED_BODY();
+
+	UPROPERTY(BlueprintReadOnly, Category = "AI Perception | Sight")
+	E_SightConeZones ConeZone = E_SightConeZones::NOTSEEN;
+
+	UPROPERTY(BlueprintReadOnly, Category = "AI Perception | Sight")
+	float PlayerDistance = 0.0f;
 };

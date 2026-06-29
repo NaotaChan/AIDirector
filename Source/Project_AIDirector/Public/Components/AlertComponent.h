@@ -36,7 +36,7 @@ public:
 	void SetCanUpdateAlert(bool NewStatus) {CanUpdateAlert = NewStatus;}
 	
 	UFUNCTION(BlueprintCallable, Category = "Alert")
-	void UpdateAlertValueFromSense(E_AISense InputSense, E_SightConeZones CurrentTypeOfCone = E_SightConeZones::NONE);
+	void UpdateAlertValueFromSense(E_AISense InputSense, E_SightConeZones CurrentTypeOfCone = E_SightConeZones::NONE, float DistanceMultiplier = 1.0f);
 	
 	UFUNCTION(BlueprintCallable, Category = "Alert")
 	void UpdateAlertValue(float AlertDelta, bool IsFromTouching = false);

@@ -58,7 +58,7 @@ public:
 	void ClearLoseSight();
 	
 	UFUNCTION(BlueprintCallable, Category= "Perception | Sight")
-	E_SightConeZones GetTypeOfSightCone (AActor* UpdatedActor);
+	FSightConeResult GetTypeOfSightCone (AActor* UpdatedActor);
 	
 	
 	

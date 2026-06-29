@@ -63,6 +63,19 @@ public:
 	float SightPeripheralHalfAngleDegree_Peripheral = 90.f;
 	
 	
+	//Min & Max multiplier of sight
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight", meta = (ClampMin = "0.0", ClampMax = "2.0"))
+	float SightMultiplier_Max = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Sight", meta = (ClampMin = "0.0", ClampMax = ".0"))
+	float SightMultiplier_Min = 0.2f;
+	
+	//Min & Max multiplier of hearing
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Hearing", meta = (ClampMin = "0.0", ClampMax = "2.0"))
+	float HearingMultiplier_Max = 1.0f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Perception | Hearing", meta = (ClampMin = "0.0", ClampMax = "1.0"))
+	float HearingMultiplier_Min = 0.2f;
 	
 	
 	//hearing

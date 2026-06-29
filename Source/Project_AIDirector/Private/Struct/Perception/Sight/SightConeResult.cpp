@@ -2,12 +2,3 @@
 
 
 #include "Struct/Perception/Sight/SightConeResult.h"
-
-
-SightConeResult::SightConeResult()
-{
-}
-
-SightConeResult::~SightConeResult()
-{
-}

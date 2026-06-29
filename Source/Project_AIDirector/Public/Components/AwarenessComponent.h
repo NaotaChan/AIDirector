@@ -42,7 +42,7 @@ public:
 	void SetIsDecreasing(bool NewStatus) {IsDecreasing = NewStatus;}
 	
 	UFUNCTION(BlueprintCallable, Category = "Awareness")
-	void UpdateAwarenessValueFromSense(E_AISense InputSense, bool IsFromWhistle = false, E_SightConeZones CurrentTypeOfCone = E_SightConeZones::NONE);
+	void UpdateAwarenessValueFromSense(E_AISense InputSense, bool IsFromWhistle = false, E_SightConeZones CurrentTypeOfCone = E_SightConeZones::NONE, float DistanceMultiplier = 1.0f);
 	
 	UFUNCTION(BlueprintCallable, Category = "Awareness")
 	void UpdateAwarenessValue(float AwarenessDelta);
