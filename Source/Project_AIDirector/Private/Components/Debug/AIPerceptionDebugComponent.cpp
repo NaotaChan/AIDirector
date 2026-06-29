@@ -119,7 +119,7 @@ void UAIPerceptionDebugComponent::DrawDebug(
 		DrawDebug2DSector(World, Location, Forward, Data->SightRadius_Wide, Data->SightPeripheralHalfAngleDegree_Wide, FColor::Blue);
 
 		// PERIPHERAL
-		DrawDebug2DSector(World, Location, Forward, Data->SightRadius_Peripheral, Data->SightPeripheralHalfAngleDegree_Peripheral, FColor::Yellow);
+		DrawDebug2DSector(World, Location, Forward, Data->SightRadius_Peripheral, Data->SightPeripheralHalfAngleDegree_Peripheral, FColor::Purple);
 
 		// BACKWARD
 		DrawDebugCircle(World, DrawLoc, Data->SightRadius_Backward, 32, FColor::Green, false, -1.f, 0, 2.f, YAxis, ZAxis, false);
