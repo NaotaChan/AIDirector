@@ -40,7 +40,7 @@ static void DrawDebug2DSector(const UWorld* World, const FVector& Center, const 
 	//Left side of the cone
 	DrawDebugLine(World, DrawCenter, PrevPoint, Color, false, -1.f, 0, 2.f);
 
-	// Disegna l'arco
+	//Draw the arc
 	for (int32 i = 1; i <= Segments; ++i)
 	{
 		FVector NextPoint = DrawCenter + FRotator(0, StartAngle + (i * AngleStep), 0).Vector() * Radius;
@@ -74,12 +74,12 @@ void UAIPerceptionDebugComponent::DrawDebug(
 	FVector ZAxis = FVector::ForwardVector;
 	
 	//HEARING
-	if (bDrawHearing)
+	if (bDrawHearing && bIsDeaf == false)
 	{
 		DrawDebugCircle(
 			World,
 			DrawLoc,
-			Data->WalkHearingRange,
+			Data->WalkHearingRange, //HEARING WAL RANGE
 			32,
 			FColor::Red, 
 			false, 
@@ -94,7 +94,7 @@ void UAIPerceptionDebugComponent::DrawDebug(
 		DrawDebugCircle(
 			World,
 			DrawLoc,
-			Data->RunHearingRange,
+			Data->RunHearingRange, //HEARING RUN RANGE
 			32,
 			FColor::Yellow, 
 			false, 
@@ -108,7 +108,7 @@ void UAIPerceptionDebugComponent::DrawDebug(
 	}
 
 	//SIGHT
-	if (bDrawSight)
+	if (bDrawSight && bIsBlind == false)
 	{
 		FVector Forward = Rotation.Vector();
 
@@ -124,7 +124,6 @@ void UAIPerceptionDebugComponent::DrawDebug(
 		// BACKWARD
 		DrawDebugCircle(World, DrawLoc, Data->SightRadius_Backward, 32, FColor::Green, false, -1.f, 0, 2.f, YAxis, ZAxis, false);
 	}
-	
 }
 
 void UAIPerceptionDebugComponent::SetIsBlind()
@@ -158,6 +157,7 @@ void UAIPerceptionDebugComponent::SetIsDeaf()
 
 	ConfigHearing->HearingRange = 0.f;
 	Perception->RequestStimuliListenerUpdate();
+
 }
 
 

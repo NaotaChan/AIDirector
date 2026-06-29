@@ -7,7 +7,6 @@
 #include "Components/ActorComponent.h"
 #include "AIPerceptionDebugComponent.generated.h"
 
-class AAI_BaseController;
 class UAIInfo_DataAsset;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
