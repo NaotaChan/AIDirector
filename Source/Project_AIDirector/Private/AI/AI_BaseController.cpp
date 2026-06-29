@@ -300,6 +300,7 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 			
 			if (CurrentTypeOfCone != E_SightConeZones::NOTSEEN)
 			{
+				//Initial Neutral Value
 				float DistanceMultiplier = 1.0;
 				
 				if (GetNPCRef() && GetNPCRef()->GetAIInfo_DataAsset())

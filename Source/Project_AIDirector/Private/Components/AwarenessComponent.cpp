@@ -56,7 +56,7 @@ void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense, bo
 		{
 			//Retrieve the base value that depends on the cone 
 			float BaseIncrease = GetCorrectSightAwareness(CurrentTypeOfCone);
-			//Multiply it by the distance multiplier (e.g., 10.0 * 0.5 = 5.0)
+			//Multiply it by the distance multiplier (e.g. 10.0 * 0.5 = 5.0)
 			float FinalIncrease = BaseIncrease * DistanceMultiplier;
 			
 			UpdateAwarenessValue(FinalIncrease);
