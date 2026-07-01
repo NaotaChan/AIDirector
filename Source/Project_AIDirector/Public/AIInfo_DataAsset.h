@@ -16,7 +16,7 @@ public:
 	
 	//AI Types
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AI Types")
-	E_AITypes AITypes = E_AITypes::REGULAR; 
+	E_AITypes AITypes = E_AITypes::NONE; 
 	
 	
 	//Movement

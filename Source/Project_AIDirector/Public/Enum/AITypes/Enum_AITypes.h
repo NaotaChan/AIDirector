@@ -4,6 +4,7 @@
 UENUM(BlueprintType)
 enum class E_AITypes : uint8
 {
+	NONE		UMETA(DisplayName = "None"),
 	REGULAR		UMETA(DisplayName = "Regular"),
 	ELITE		UMETA(DisplayName = "Elite")
 };

@@ -311,11 +311,11 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 					float MaxConeRange = Data->SightRadius;
 					switch (CurrentTypeOfCone)
 					{
-					case E_SightConeZones::NARROW:       MaxConeRange = Data->SightRadius; break;
-					case E_SightConeZones::WIDE:         MaxConeRange = Data->SightRadius_Wide; break;
-					case E_SightConeZones::PERIPHERAL:   MaxConeRange = Data->SightRadius_Peripheral; break;
-					case E_SightConeZones::BACKWARD:     MaxConeRange = Data->SightRadius_Backward; break;
-					default: break;
+						case E_SightConeZones::NARROW:       MaxConeRange = Data->SightRadius; break;
+						case E_SightConeZones::WIDE:         MaxConeRange = Data->SightRadius_Wide; break;
+						case E_SightConeZones::PERIPHERAL:   MaxConeRange = Data->SightRadius_Peripheral; break;
+						case E_SightConeZones::BACKWARD:     MaxConeRange = Data->SightRadius_Backward; break;
+						default: break;
 					}
                 
 					//Dynamic multiplier calculation based on distances and data asset parameters
