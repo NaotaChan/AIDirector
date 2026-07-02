@@ -148,7 +148,7 @@ public:
 	float HuntingTimer = 30.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BT | Disturbance")
-	float DisturbanceCooldownTimer = 2.f;
+	float DisturbanceCooldownTimer = 1.f;
 	
 
 };
