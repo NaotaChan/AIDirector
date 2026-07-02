@@ -60,6 +60,25 @@ public:
 	UFUNCTION(BlueprintCallable, Category= "Perception | Sight")
 	FSightConeResult GetTypeOfSightCone (AActor* UpdatedActor);
 	
+	//BB Keys
+	FName KeyNameHasTouchedTarget = "HasTouchedTarget";
+	
+	FName KeyNameTarget = "TargetActor";
+	
+	FName KeyNameDisturbanceLocation = "DisturbanceLocation";
+	
+	
+	
+	UFUNCTION(BlueprintCallable, Category = "BT")
+	void ClearTargetKey();
+	
+	UFUNCTION(BlueprintCallable, Category = "BT")
+	void ClearDisturbanceLocationKey();
+	
+	
+	void UpdateDisturbanceLocation(AActor* DisturbanceActor);
+	
+	void ClearDisturbanceCooldown();
 	
 	
 
@@ -79,5 +98,11 @@ protected:
 	bool HasLoseSight = false;
 	
 	FTimerHandle LoseSightTimerHandle;
+	
+	
+	bool IsDisturbanceCooldownActive = false;
+	
+	FTimerHandle DisturbanceCooldownTimerHandle;
+
 
 };

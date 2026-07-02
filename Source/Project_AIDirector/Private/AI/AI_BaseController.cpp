@@ -19,6 +19,7 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISense_Touch.h"
 #include "Perception/AISenseConfig_Touch.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Struct/Perception/Sight/SightConeResult.h"
 
@@ -43,8 +44,6 @@ AAI_BaseController::AAI_BaseController(const FObjectInitializer& ObjectInitializ
 	AwarenessComponent = CreateDefaultSubobject<UAwarenessComponent>(TEXT("Awareness Component"));
 	AlertComponent = CreateDefaultSubobject<UAlertComponent>(TEXT("Alert Component"));
 }
-
-
 
 void AAI_BaseController::OnPossess(APawn* InPawn)
 {
@@ -225,6 +224,9 @@ void AAI_BaseController::OnLoseSightTimerFinished()
 		{
 			UpdateCurrentStatusTag(E_AITag::HUNTING);
 		}
+		
+		
+		ClearTargetKey();
 	}
 	
 	ClearLoseSight();
@@ -300,6 +302,7 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 			
 			if (CurrentTypeOfCone != E_SightConeZones::NOTSEEN)
 			{
+				
 				//Initial Neutral Value
 				float DistanceMultiplier = 1.0;
 				
@@ -331,6 +334,9 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 					}
 				}
 				
+				Blackboard->SetValueAsObject(KeyNameTarget, UpdatedActor);
+				UpdateDisturbanceLocation(UpdatedActor);
+				
 				GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed, false, CurrentTypeOfCone, DistanceMultiplier);
 				GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed, CurrentTypeOfCone, DistanceMultiplier);
 			
@@ -338,7 +344,8 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 				{
 					UpdateCurrentStatusTag(E_AITag::ALERTED);
 				}
-			
+				
+				UpdateDisturbanceLocation(Cast<AActor>(Blackboard->GetValueAsObject(KeyNameTarget)));
 				ClearLoseSight();
 			}
 			
@@ -393,7 +400,9 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Sound Distance: %f"), SoundDistance));
 					}
 				}
-             
+				
+				UpdateDisturbanceLocation(UpdatedActor);
+				
 				//Pass the hearing multiplier
 				GetAwarenessComponent()->UpdateAwarenessValueFromSense(
 				   CurrentSenseUsed, 
@@ -401,6 +410,7 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 				   E_SightConeZones::NONE, 
 				   HearingMultiplier
 				);
+				
 				
 				//DEBUG
 				if (GEngine)
@@ -417,9 +427,39 @@ void AAI_BaseController::ActorPerceivedUpdate_Implementation(AActor* UpdatedActo
 		
 		if (Stimulus.WasSuccessfullySensed())
 		{
+			UpdateDisturbanceLocation(UpdatedActor);
+			
 			GetAwarenessComponent()->UpdateAwarenessValueFromSense(CurrentSenseUsed);
 			GetAlertComponent()->UpdateAlertValueFromSense(CurrentSenseUsed);
 		}
 	}
 }
 
+void AAI_BaseController::ClearTargetKey()
+{
+	Blackboard->ClearValue(KeyNameTarget);
+}
+
+void AAI_BaseController::ClearDisturbanceLocationKey()
+{
+	Blackboard->ClearValue(KeyNameDisturbanceLocation);
+}
+
+void AAI_BaseController::UpdateDisturbanceLocation(AActor* DisturbanceActor)
+{
+	if (!IsValid(DisturbanceActor)) return;
+	
+	if (!IsDisturbanceCooldownActive)
+	{
+		Blackboard->SetValueAsVector(KeyNameDisturbanceLocation, DisturbanceActor->GetActorLocation());
+		
+		IsDisturbanceCooldownActive = true;
+		GetWorld()->GetTimerManager().SetTimer(DisturbanceCooldownTimerHandle, this, &AAI_BaseController::ClearDisturbanceCooldown, GetNPCRef()->GetAIInfo_DataAsset()->DisturbanceCooldownTimer, false);
+	}
+}
+
+void AAI_BaseController::ClearDisturbanceCooldown()
+{
+	GetWorld()->GetTimerManager().ClearTimer(DisturbanceCooldownTimerHandle);
+	IsDisturbanceCooldownActive = false;
+}

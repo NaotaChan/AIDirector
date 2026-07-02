@@ -64,7 +64,19 @@ void UAwarenessComponent::UpdateAwarenessValueFromSense(E_AISense InputSense, bo
 		}
 	case E_AISense::HEARING:
 		{
-			UpdateAwarenessValue(IsFromWhistle ? MaxAwarenessValue : AwarenessIncreaseOnHearing);
+			UE_LOG(LogTemp, Warning, TEXT("Base: %f  Multiplier: %f"),
+			AwarenessIncreaseOnHearing,
+			DistanceMultiplier);
+			
+			if (IsFromWhistle)
+			{
+				UpdateAwarenessValue(MaxAwarenessValue);
+			}
+			else
+			{
+				float FinalIncrease = AwarenessIncreaseOnHearing * DistanceMultiplier;
+				UpdateAwarenessValue(FinalIncrease);
+			}
 			break;
 		}
 	case E_AISense::TOUCH:

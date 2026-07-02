@@ -139,5 +139,16 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Alert | Sight")
 	float AlertIncreaseOnSight_Backward = 2.f;
+	
+	//Behavior Tree
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BT | Investigate")
+	float InvestigateTimer = 15.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BT | Hunting")
+	float HuntingTimer = 30.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BT | Disturbance")
+	float DisturbanceCooldownTimer = 2.f;
+	
 
 };
