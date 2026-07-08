@@ -463,3 +463,31 @@ void AAI_BaseController::ClearDisturbanceCooldown()
 	GetWorld()->GetTimerManager().ClearTimer(DisturbanceCooldownTimerHandle);
 	IsDisturbanceCooldownActive = false;
 }
+
+void AAI_BaseController::LinkEliteWithRegular(AAI_BaseNPC* EliteRef, AAI_BaseNPC* RegularRef)
+{
+	RegularRef->GetAICRef()->LinkEliteToRegular(EliteRef);
+	EliteRef->GetAICRef()->AddRegularToEliteLinkedList(RegularRef);
+}
+
+
+void AAI_BaseController::RemoveLinkedRegular(AAI_BaseNPC* RegularRef)
+{
+	if (!IsValid(RegularRef)) return;
+	
+	LinkedRegularNPCs.Remove(RegularRef);
+	
+	if (LinkedRegularNPCs.IsEmpty())
+	{
+		GetAlertComponent()->ResetAlert(true);
+	}
+	
+	RegularRef->GetAICRef()->LinkedEliteNPC = NULL;
+}
+
+void AAI_BaseController::UpdateBehaviorOnLinkedNPC(AAI_BaseNPC* RegularRef)
+{
+	RegularRef->GetAICRef()->GetAwarenessComponent()->UpdateAwarenessValue(GetAwarenessComponent()->GetCurrentAwarenessValue());
+	RegularRef->GetAICRef()->GetAlertComponent()->UpdateAlertValue(GetAlertComponent()->GetCurrentAlertValue(), true);
+	RegularRef->GetAICRef()->GetBlackboardComponent()->SetValueAsVector(KeyNameDisturbanceLocation, GetBlackboardComponent()->GetValueAsVector(KeyNameDisturbanceLocation));
+}

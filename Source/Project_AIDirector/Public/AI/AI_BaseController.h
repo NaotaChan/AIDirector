@@ -80,6 +80,22 @@ public:
 	
 	void ClearDisturbanceCooldown();
 	
+	UFUNCTION(BlueprintCallable, Category = "Link NPC")
+	void LinkEliteWithRegular(AAI_BaseNPC* EliteRef, AAI_BaseNPC* RegularRef);
+	
+	void LinkEliteToRegular(AAI_BaseNPC* EliteRef) {LinkedEliteNPC = EliteRef;};
+	
+	UFUNCTION(BlueprintPure, Category = "Link NPC")
+	AAI_BaseNPC* GetLinkedEliteNPC() const {return LinkedEliteNPC;}
+	
+	void AddRegularToEliteLinkedList(AAI_BaseNPC* RegularRef) {LinkedRegularNPCs.AddUnique(RegularRef);};
+
+	UFUNCTION(BlueprintCallable, Category = "Link NPC")
+	void RemoveLinkedRegular(AAI_BaseNPC* RegularRef);
+	
+	UFUNCTION(BlueprintCallable, Category = "Link NPC")
+	void UpdateBehaviorOnLinkedNPC(AAI_BaseNPC* RegularRef);
+	
 	
 
 protected:
@@ -103,6 +119,10 @@ protected:
 	bool IsDisturbanceCooldownActive = false;
 	
 	FTimerHandle DisturbanceCooldownTimerHandle;
+	
+	AAI_BaseNPC* LinkedEliteNPC;
+	
+	TArray<AAI_BaseNPC*> LinkedRegularNPCs;
 
 
 };
