@@ -22,13 +22,15 @@ public:
 	float GetCloseDistance() {return CloseDistance;}
 
 protected:
-	UPROPERTY(EditInstanceOnly, Category = "Waypoint")
+	UPROPERTY(EditInstanceOnly, Category = "Waypoint", meta = (EditConditionHides, EditCondition = "IsPreventPassage == false"))
 	AAIWaypoint* NextWaypoint;
 	
-	UPROPERTY(EditInstanceOnly, Category = "Waypoint")
+	UPROPERTY(EditInstanceOnly, Category = "Waypoint", meta = (EditConditionHides, EditCondition = "IsPreventPassage == false"))
 	float WaitTime = 0.f;
 	
-	UPROPERTY(EditInstanceOnly, Category = "Waypoint")
+	UPROPERTY(EditInstanceOnly, Category = "Waypoint", meta = (EditConditionHides, EditCondition = "IsPreventPassage == false"))
 	float CloseDistance = 200.f;
-
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Prevent Passage Point")
+	bool IsPreventPassage = false;
 };

@@ -96,6 +96,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Link NPC")
 	void UpdateBehaviorOnLinkedNPC(AAI_BaseNPC* RegularRef);
 	
+	UFUNCTION(BlueprintCallable, Category = "Link NPC")
+	void UpdateBehaviorOnAllLinkedNPC();
+	
 	
 
 protected:

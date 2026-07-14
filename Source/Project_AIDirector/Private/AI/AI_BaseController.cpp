@@ -491,3 +491,11 @@ void AAI_BaseController::UpdateBehaviorOnLinkedNPC(AAI_BaseNPC* RegularRef)
 	RegularRef->GetAICRef()->GetAlertComponent()->UpdateAlertValue(GetAlertComponent()->GetCurrentAlertValue(), true);
 	RegularRef->GetAICRef()->GetBlackboardComponent()->SetValueAsVector(KeyNameDisturbanceLocation, GetBlackboardComponent()->GetValueAsVector(KeyNameDisturbanceLocation));
 }
+
+void AAI_BaseController::UpdateBehaviorOnAllLinkedNPC()
+{
+	for (AAI_BaseNPC* LinkedNPC : LinkedRegularNPCs)
+	{
+		UpdateBehaviorOnLinkedNPC(LinkedNPC);
+	}
+}

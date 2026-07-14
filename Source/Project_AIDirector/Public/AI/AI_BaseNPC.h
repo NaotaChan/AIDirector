@@ -12,6 +12,7 @@
 class AAI_BaseController;
 class AAIWaypoint;
 class UAIInfo_DataAsset;
+class AAIPreventPassagePoint;
 class UAIPerceptionDebugComponent;
 
 UCLASS()
@@ -35,6 +36,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Waypoint")
 	AAIWaypoint* GetStartWaypoint() const {return StartWaypoint;}
 	
+	UFUNCTION(BlueprintPure, Category = "Prevent Passage Point")
+	AAIPreventPassagePoint* GetPreventPassagePoint() const {return PreventPassagePoint;}
+	
 	UFUNCTION(BlueprintPure, Category = "Data Asset")
 	UAIInfo_DataAsset* GetAIInfo_DataAsset() const {return AIInfo_DataAsset;}
 	
@@ -56,6 +60,10 @@ protected:
 	
 	UPROPERTY(EditInstanceOnly, Category = "Waypoint")
 	AAIWaypoint* StartWaypoint;
+	
+	UPROPERTY(EditInstanceOnly, Category = "Prevent Passage Point")
+	AAIPreventPassagePoint* PreventPassagePoint;
+
 	
 	AAI_BaseController* AICRef;
 	
